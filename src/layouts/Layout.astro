@@ -3,7 +3,6 @@ import { ViewTransitions } from "astro:transitions";
 import { pwaInfo } from "virtual:pwa-info";
 import Footer from "@components/footer.astro";
 import Navbar from "@components/navbar/navbar.astro";
-import LanguageSelector from "@components/languageselector.astro";
 import "@fontsource-variable/inter";
 
 // Remove old astro-i18next imports
@@ -130,10 +129,7 @@ const hrefLangs = generateHrefLangs();
 	<body class="dark:bg-stone-950">
 		<header class="relative">
 			<Navbar />
-			<!-- Language Selector in header -->
-			<div class="absolute top-4 right-4">
-				<LanguageSelector />
-			</div>
+			
 		</header>
 		<main>
 			<slot />
