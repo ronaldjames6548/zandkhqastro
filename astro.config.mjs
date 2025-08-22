@@ -8,34 +8,29 @@ import alpinejs from "@astrojs/alpinejs";
 import AstroPWA from "@vite-pwa/astro";
 import icon from "astro-icon";
 import solidJs from "@astrojs/solid-js";
-import vercel from '@astrojs/vercel/serverless';
+// Remove vercel import for static build
 
 export default defineConfig({
   site: "https://zandkhqastro.vercel.app",
-  output: "hybrid",
-  adapter: vercel({
-    webAnalytics: {
-      enabled: true,
-    },
-  }),
+  output: "static", // CHANGED: Use static output
+  // Remove adapter for static builds
   
-  // MOVED: i18n should be at top level, not inside integrations
   i18n: {
     defaultLocale: "en",
     locales: ["en", "it"],
     routing: {
-      prefixDefaultLocale: false, // /about for English, /it/about for Italian
+      prefixDefaultLocale: false,
     },
   },
 
   vite: {
     define: {
-      __DATE__: `'${new Date().toISOString()}'` // FIXED: __ instead of **
+      __DATE__: `'${new Date().toISOString()}'`
     }
   },
 
   integrations: [
-    tailwind(), // FIXED: Added missing comma
+    tailwind(),
     alpinejs(),
     AstroPWA({
       mode: "production",
@@ -64,7 +59,7 @@ export default defineConfig({
       },
       workbox: {
         navigateFallback: "/404",
-        globPatterns: ["*.js"]
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,webp}"]
       },
       devOptions: {
         enabled: false,
@@ -78,17 +73,13 @@ export default defineConfig({
       filter(page) {
         const url = new URL(page, 'https://zandkhqastro.vercel.app');
         
-        // All non-English language codes
         const nonEnglishLangs = ['it'];
         
-        // Should exclude if:
         const shouldExclude = 
-          // Non-English blog posts (but keeps /{lang}/blog/ index pages)
           nonEnglishLangs.some(lang => 
             url.pathname.startsWith(`/${lang}/blog/`) && 
             url.pathname !== `/${lang}/blog/`
           ) ||
-          // Pagination, tags, categories
           /\/blog\/\d+\//.test(url.pathname) ||
           url.pathname.includes('/tag/') || 
           url.pathname.includes('/category/');
