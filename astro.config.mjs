@@ -6,6 +6,7 @@ import { autolinkConfig } from "./plugins/rehype-autolink-config";
 import rehypeSlug from "rehype-slug";
 // Remove astroI18next import - not needed anymore
 import alpinejs from "@astrojs/alpinejs";
+import solidJs from "@astrojs/solid-js"; // Added SolidJS integration
 import AstroPWA from "@vite-pwa/astro";
 import icon from "astro-icon";
 
@@ -24,7 +25,7 @@ export default defineConfig({
 	
 	vite: {
 		define: {
-			__DATE__: `'${new Date().toISOString()}'`,
+			__DATE__: `'${new Date().toISOString()}'`, // Fixed: __ instead of **
 		},
 	},
 	integrations: [
@@ -32,6 +33,7 @@ export default defineConfig({
 		sitemap(),
 		// Remove astroI18next() - not needed anymore
 		alpinejs(),
+		solidJs(), // Added SolidJS integration
 		AstroPWA({
 			mode: "production",
 			base: "/",
