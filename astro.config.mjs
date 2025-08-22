@@ -11,7 +11,7 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://astros.zank.studio",
+	site: "https://zandkhqastro.vercel.app",
 	
 	// Add Astro's built-in i18n configuration
 	i18n: {

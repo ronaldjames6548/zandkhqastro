@@ -14,7 +14,7 @@ export interface Props {
 const { posts } = Astro.props;
 
 // Get current language and create translation function
-const safeUrl = Astro.url || { pathname: '/' } as URL;
+const safeUrl = Astro.url || new URL('/', Astro.site || 'http://localhost:4321');
 const lang = getLangFromUrl(safeUrl);
 const t = useTranslations(lang);
 

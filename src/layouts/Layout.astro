@@ -21,7 +21,7 @@ export interface Props {
 }
 
 // Create safe URL object to prevent undefined errors during build
-const safeUrl = Astro.url || { pathname: '/' } as URL;
+const safeUrl = Astro.url || new URL('/', Astro.site || 'http://localhost:4321');
 
 // Get current language and translations - using safe URL
 const currentLang = getLangFromUrl(safeUrl);
