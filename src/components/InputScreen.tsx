@@ -34,17 +34,34 @@ function InputScreen({}: Props) {
     
     try {
       const tiktokUrl = url().trim();
-      console.log("Original URL:", tiktokUrl);
-      console.log("Encoded URL:", encodeURIComponent(tiktokUrl));
+      console.log("=== FRONTEND DEBUG ===");
+      console.log("1. Original URL:", tiktokUrl);
+      console.log("2. Encoded URL:", encodeURIComponent(tiktokUrl));
       
-      const apiUrl = `/api/test.json?url=${encodeURIComponent(tiktokUrl)}`;
-      console.log("API URL:", apiUrl);
+      // Construct the API URL properly
+      const apiUrl = `/api/tik.json?url=${encodeURIComponent(tiktokUrl)}`;
+      console.log("3. Final API URL:", apiUrl);
       
-      let res = await fetch(apiUrl);
+      // Test with debug API first
+      const testApiUrl = `/api/test.json?url=${encodeURIComponent(tiktokUrl)}`;
+      console.log("4. Test API URL:", testApiUrl);
+      
+      let res = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      console.log("5. Response status:", res.status);
+      console.log("6. Response URL:", res.url);
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      
       let json = await res.json();
-      
-      // Debug: Log the response
-      console.log("API Response:", json);
+      console.log("7. API Response:", json);
       
       // Check for error status
       if (json.status === "error" || !json.result) {
@@ -60,7 +77,7 @@ function InputScreen({}: Props) {
       loadAd();
       setError("");
     } catch (error) {
-      console.error("Fetch error:", error);
+      console.error("=== FETCH ERROR ===", error);
       toast.error(error.message || "An error occurred while fetching data", {
         duration: 3000,
         position: "bottom-center",
@@ -80,6 +97,7 @@ function InputScreen({}: Props) {
       if (permission.state === 'granted' || permission.state === 'prompt') {
         const text = await navigator.clipboard.readText();
         setUrl(text);
+        console.log("Pasted URL:", text);
       }
     } catch (err) {
       toast.error("Clipboard access denied");
@@ -185,7 +203,9 @@ function InputScreen({}: Props) {
               onSubmit={(e) => {
                 e.preventDefault();
                 const currentUrl = url().trim();
+                console.log("=== FORM SUBMISSION ===");
                 console.log("Form submission - URL value:", currentUrl);
+                console.log("URL length:", currentUrl.length);
                 
                 if (!currentUrl) {
                   toast.error("Please enter a valid URL");
@@ -197,13 +217,18 @@ function InputScreen({}: Props) {
                   return;
                 }
                 
+                console.log("Calling fetchData...");
                 fetchData();
               }}
             >
               <div class="relative flex-grow">
                 <input type="text"
                   value={url()}
-                  onInput={(e) => setUrl(e.currentTarget.value)}
+                  onInput={(e) => {
+                    const newUrl = e.currentTarget.value;
+                    console.log("Input changed:", newUrl);
+                    setUrl(newUrl);
+                  }}
                   placeholder="Paste TikTok video link here"
                   class="w-full h-14 border-gray-700 text-black rounded-xl px-5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 flex-1 px-4 py-3 rounded-md focus:ring-2 focus:ring-blue-600"
                 />
@@ -211,7 +236,7 @@ function InputScreen({}: Props) {
                   onClick={handlePaste} 
                   class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012 2h2a2 2 0 002-2"></path>
                   </svg>
                   Paste
                 </button>
