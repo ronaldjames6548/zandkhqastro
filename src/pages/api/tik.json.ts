@@ -3,77 +3,79 @@ import { Downloader } from "@tobyg74/tiktok-api-dl";
 
 export const prerender = false;
 
-// Keep GET for backward compatibility but redirect to POST
-export const GET: APIRoute = async (context) => {
-  return new Response(JSON.stringify({ 
-    error: "Please use POST method with request body",
-    status: "error",
-    hint: "Send {\"url\": \"your-tiktok-url\"} in request body"
-  }), {
-    status: 400,
-    headers: {
-      "content-type": "application/json",
-    },
-  });
+// Handle all HTTP methods
+export const GET: APIRoute = async ({ request }) => {
+  return handleRequest(request);
 };
 
 export const POST: APIRoute = async ({ request }) => {
-  try {
-    console.log("=== POST API DEBUG ===");
-    console.log("1. Request method:", request.method);
-    console.log("2. Request URL:", request.url);
-    
-    // Get data from request body
-    let requestBody;
-    try {
-      requestBody = await request.json();
-      console.log("3. Request body:", requestBody);
-    } catch (e) {
-      console.log("3. Error parsing JSON body:", e.message);
-      return new Response(JSON.stringify({ 
-        error: "Invalid JSON in request body",
-        status: "error" 
-      }), {
-        status: 400,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-    }
+  return handleRequest(request);
+};
 
-    const urlTik = requestBody?.url || "";
-    console.log("4. Extracted URL:", urlTik);
+async function handleRequest(request: Request) {
+  try {
+    console.log("=== API HANDLER ===");
+    console.log("1. Method:", request.method);
+    console.log("2. URL:", request.url);
+    
+    let urlTik = "";
+    
+    if (request.method === "POST") {
+      // Handle POST with JSON body
+      try {
+        const body = await request.json();
+        urlTik = body?.url || "";
+        console.log("3. POST - URL from body:", urlTik);
+      } catch (e) {
+        console.log("3. POST - Error reading body:", e.message);
+        return new Response(JSON.stringify({ 
+          error: "Invalid JSON body",
+          status: "error" 
+        }), {
+          status: 400,
+          headers: { "content-type": "application/json" },
+        });
+      }
+    } else if (request.method === "GET") {
+      // Handle GET with query params (backup)
+      try {
+        const url = new URL(request.url);
+        urlTik = url.searchParams.get("url") || "";
+        console.log("3. GET - URL from query:", urlTik);
+      } catch (e) {
+        console.log("3. GET - Error reading query:", e.message);
+      }
+    }
+    
+    console.log("4. Final URL:", urlTik);
 
     if (!urlTik) {
-      console.log("5. ERROR: No URL in request body");
+      console.log("5. ERROR: No URL provided");
       return new Response(JSON.stringify({ 
-        error: "url is required in request body",
+        error: "url is required",
         status: "error",
-        example: { url: "https://www.tiktok.com/@user/video/123" }
+        method: request.method,
+        hint: request.method === "POST" ? "Send {\"url\": \"tiktok-url\"} in body" : "Use ?url=tiktok-url"
       }), {
         status: 400,
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
       });
     }
 
-    // Validate TikTok URL format
+    // Validate TikTok URL
     if (!urlTik.includes("tiktok.com") && !urlTik.includes("douyin")) {
-      console.log("6. ERROR: Invalid TikTok URL format");
+      console.log("6. ERROR: Invalid URL format");
       return new Response(JSON.stringify({ 
         error: "Invalid TikTok URL format",
         status: "error" 
       }), {
         status: 400,
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
       });
     }
 
-    console.log("7. URL validation passed, calling TikTok API...");
-
+    console.log("7. Calling TikTok API...");
+    
     // Handle douyin URLs
     let processedUrl = urlTik;
     if (urlTik.includes("douyin")) {
@@ -84,49 +86,41 @@ export const POST: APIRoute = async ({ request }) => {
         }).then((response) => {
           return response.url.replace("douyin", "tiktok");
         });
-        console.log("8. Processed douyin URL:", processedUrl);
       } catch (e) {
         console.error("Error processing douyin URL:", e);
       }
     }
 
-    // Call the TikTok downloader
-    console.log("9. Calling Downloader with URL:", processedUrl);
-    let data = await Downloader(processedUrl, {
+    // Call TikTok downloader
+    const data = await Downloader(processedUrl, {
       version: "v3",
     });
 
-    console.log("10. TikTok API response status:", data?.status);
+    console.log("8. TikTok API response status:", data?.status);
 
-    // Check if the response is successful
     if (!data || data.status === "error") {
-      console.log("11. ERROR: TikTok API returned error");
+      console.log("9. ERROR: TikTok API failed");
       return new Response(JSON.stringify({ 
         error: data?.message || "Failed to fetch video data",
         status: "error"
       }), {
         status: 400,
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
       });
     }
 
-    // Validate response structure
     if (!data.result) {
-      console.log("12. ERROR: No result data in response");
+      console.log("10. ERROR: No result data");
       return new Response(JSON.stringify({ 
-        error: "Invalid response format - missing result data",
+        error: "No video data found",
         status: "error"
       }), {
         status: 400,
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
       });
     }
 
-    // Process the data
+    // Process data
     const isStory = processedUrl.includes("/story/");
     if (isStory && data.result) {
       data.result.type = "story";
@@ -139,7 +133,7 @@ export const POST: APIRoute = async ({ request }) => {
       data.result.uploadDate = uploadDate;
     }
 
-    // Ensure author object exists
+    // Ensure author exists
     if (data.result && !data.result.author) {
       data.result.author = {
         avatar: null,
@@ -147,25 +141,20 @@ export const POST: APIRoute = async ({ request }) => {
       };
     }
 
-    console.log("13. SUCCESS: Returning processed data");
+    console.log("11. SUCCESS: Returning data");
     return new Response(JSON.stringify(data), {
       status: 200,
-      headers: {
-        "content-type": "application/json",
-      },
+      headers: { "content-type": "application/json" },
     });
 
   } catch (error) {
     console.error("=== API ERROR ===", error);
     return new Response(JSON.stringify({ 
       error: error.message || "Internal server error",
-      status: "error",
-      stack: error.stack
+      status: "error"
     }), {
       status: 500,
-      headers: {
-        "content-type": "application/json",
-      },
+      headers: { "content-type": "application/json" },
     });
   }
-};
+}
