@@ -21,6 +21,7 @@ interface TikTokData {
 
 type Props = {};
 
+
 function InputScreen({}: Props) {
   const [url, setUrl] = createSignal("");
   const [data, setData] = createSignal<TikTokData | null>(null);
@@ -28,81 +29,26 @@ function InputScreen({}: Props) {
   const [error, setError] = createSignal("");
   const [adLoaded, setAdLoaded] = createSignal(false);
 
-  // 🔧 IMPROVED fetchData function with better error handling and debugging
   const fetchData = async () => {
-    console.log("🔍 fetchData called");
-    
     setLoading(true);
-    setError("");
-    
     try {
-      const currentUrl = url().trim();
-      console.log("🔍 Current URL:", currentUrl);
-      
-      if (!currentUrl) {
-        throw new Error("Please enter a TikTok URL");
-      }
-      
-      if (!currentUrl.includes('tiktok.com')) {
-        throw new Error("Please enter a valid TikTok URL");
-      }
-      
-      // Construct API URL
-      const apiUrl = `/api/tik.json?url=${encodeURIComponent(currentUrl)}`;
-      console.log("🔍 API URL:", apiUrl);
-      
-      // Make the request
-      const response = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      
-      console.log("🔍 Response status:", response.status);
-      console.log("🔍 Response OK:", response.ok);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const responseData = await response.json();
-      console.log("🔍 Response data:", responseData);
-      
-      if (responseData.status === "error") {
-        throw new Error(responseData.message || "Failed to fetch TikTok data");
-      }
-      
-      if (!responseData.result) {
-        throw new Error("No video data found");
-      }
-      
-      setData(responseData);
+      let res = await fetch(`/api/tik.json?url=${encodeURIComponent(url())}`);
+      let json = await res.json();
+      if (json.status == "error") throw new Error(json.message);
+      setData(json ?? null);
       loadAd();
-      
-      toast.success("Video loaded successfully!", {
-        duration: 2000,
-        position: "bottom-center",
-      });
-      
+      setError("");
     } catch (error) {
-      console.error("❌ fetchData error:", error);
-      
-      const errorMessage = error instanceof Error ? error.message : "Failed to load TikTok video";
-      
-      toast.error(errorMessage, {
-        duration: 4000,
+      toast.error(error.message, {
+        duration: 3000,
         position: "bottom-center",
         style: {
           "font-size": "16px",
         },
       });
-      
       setData(null);
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handlePaste = async () => {
@@ -111,7 +57,6 @@ function InputScreen({}: Props) {
       if (permission.state === 'granted' || permission.state === 'prompt') {
         const text = await navigator.clipboard.readText();
         setUrl(text);
-        console.log("🔍 Pasted URL:", text);
       }
     } catch (err) {
       toast.error("Clipboard access denied");
@@ -198,61 +143,25 @@ function InputScreen({}: Props) {
       <div class="max-w-6xl mx-auto">
         <div class="download-box rounded-2xl">
           <div class="bg-cyan-800/80 rounded-xl backdrop-blur-md p-4">
-            {/* 🔧 IMPROVED form submission with better validation */}
             <form class="flex flex-col md:flex-row items-stretch md:items-center gap-2"
               onSubmit={(e) => {
                 e.preventDefault();
-                
-                // Get the URL value directly from the input element as backup
-                const inputElement = document.querySelector('input[type="text"]') as HTMLInputElement;
-                const urlFromInput = inputElement?.value?.trim() || "";
-                const urlFromSignal = url().trim();
-                
-                // Use whichever URL value is available
-                const finalUrl = urlFromSignal || urlFromInput;
-                
-                console.log("🔍 URL from signal:", urlFromSignal);
-                console.log("🔍 URL from input:", urlFromInput);
-                console.log("🔍 Final URL:", finalUrl);
-                
-                if (!finalUrl) {
-                  toast.error("Please enter a valid TikTok URL");
-                  return;
+                if (!url()) {
+                  toast.error("Please enter a valid URL");
+                } else {
+                  fetchData();
                 }
-                
-                if (!finalUrl.includes('tiktok.com')) {
-                  toast.error("Please enter a valid TikTok URL");
-                  return;
-                }
-                
-                // Update the signal with the final URL
-                setUrl(finalUrl);
-                
-                // Call fetchData
-                fetchData();
               }}
             >
               <div class="relative flex-grow">
-                <input 
-                  type="text"
+                <input type="text"
                   value={url()}
-                  onInput={(e) => {
-                    const newValue = e.currentTarget.value;
-                    console.log("🔍 Input changed:", newValue);
-                    setUrl(newValue);
-                  }}
+                  onInput={(e) => setUrl(e.currentTarget.value)}
                   placeholder="Paste TikTok video link here"
                   class="w-full h-14 border-gray-700 text-black rounded-xl px-5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 flex-1 px-4 py-3 rounded-md focus:ring-2 focus:ring-blue-600"
                 />
                 <button type="button" 
-                  onClick={() => {
-                    handlePaste().then(() => {
-                      // After pasting, log the URL
-                      setTimeout(() => {
-                        console.log("🔍 URL after paste:", url());
-                      }, 100);
-                    });
-                  }} 
+                  onClick={handlePaste} 
                   class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2"></path>
@@ -260,20 +169,11 @@ function InputScreen({}: Props) {
                   Paste
                 </button>
               </div>
-              <button type="submit" 
-                disabled={loading()}
-                class={`h-14 px-8 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 ${loading() ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                {loading() ? (
-                  <svg class="animate-spin h-6 w-6" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                  </svg>
-                )}
-                {loading() ? 'Processing...' : 'Download'}
+              <button type="submit" class="h-14 px-8 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg> 
+                Download
               </button>
             </form>
           </div>
@@ -282,20 +182,10 @@ function InputScreen({}: Props) {
 
       {loading() && (
         <div class="flex justify-center mt-4">
-          <div class="text-center">
-            <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto mb-2" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-            </svg>
-            <p class="text-gray-600 dark:text-gray-400">Processing TikTok video...</p>
-          </div>
-        </div>
-      )}
-
-      {/* Error Message Display */}
-      {error() && !loading() && (
-        <div class="mt-4 p-4 bg-red-100 dark:bg-red-900/20 border border-red-400 text-red-700 dark:text-red-400 rounded-lg text-center">
-          <p>{error()}</p>
+          <svg class="animate-spin h-10 w-10 text-blue-600" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+          </svg>
         </div>
       )}
 
@@ -335,42 +225,33 @@ function InputScreen({}: Props) {
                   </div>
 
                   <div class="space-y-2">
-                    {data()!.result.videoSD && (
-                      <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoSD)}&type=.mp4&title=${encodeURIComponent(data()!.result.author.nickname || 'tiktok-video')}`} 
-                         class="download-button bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 w-full px-4 py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all duration-300 no-underline">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg> 
-                        Download SD (No Watermark)
-                      </a>
-                    )}
-                    
-                    {data()!.result.videoHD && (
-                      <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoHD)}&type=.mp4&title=${encodeURIComponent(data()!.result.author.nickname || 'tiktok-video')}`} 
-                         class="download-button bg-gradient-to-r from-pink-600 to-pink-400 hover:from-pink-500 hover:to-pink-300 w-full px-4 py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all duration-300 no-underline">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg> 
-                        Download HD (No Watermark)
-                      </a>
-                    )}
-                    
-                    {data()!.result.videoWatermark && (
-                      <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoWatermark)}&type=.mp4&title=${encodeURIComponent(data()!.result.author.nickname || 'tiktok-video')}`} 
-                         class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 w-full px-4 py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all duration-300 no-underline">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                        </svg> 
-                        Download (With Watermark)
-                      </a>
-                    )}
-                    
-                    <a href="/" class="download-button bg-gradient-to-r from-gray-600 to-gray-400 hover:from-gray-500 hover:to-gray-300 w-full px-4 py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all duration-300 no-underline">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                      </svg>
-                      Download Another Video
-                    </a>
+                    <button class="download-button bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                      </svg> 
+                      {data()!.result.videoSD && (
+                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoSD)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download SD (No Watermark)</a>
+                      )}
+                    </button>
+                    <button class="download-button bg-gradient-to-r from-pink-600 to-pink-400 hover:from-pink-500 hover:to-pink-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                      </svg> 
+                      {data()!.result.videoHD && (
+                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoHD)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download HD (No Watermark)</a>
+                      )}
+                    </button>
+                    <button class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                      </svg> 
+                      {data()!.result.videoWatermark && (
+                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoWatermark)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download (With Watermark)</a>
+                      )}
+                    </button>
+                    <button class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300">
+                      <a href="/" class="btn">Download Another Video</a> 
+                    </button>
                   </div>
                 </div>
               </div>
