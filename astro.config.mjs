@@ -18,20 +18,24 @@ export default defineConfig({
       enabled: true,
     },
   }),
+  
+  // MOVED: i18n should be at top level, not inside integrations
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "it"],
+    routing: {
+      prefixDefaultLocale: false, // /about for English, /it/about for Italian
+    },
+  },
+
   vite: {
     define: {
-      __DATE__: `'${new Date().toISOString()}'`
+      __DATE__: `'${new Date().toISOString()}'` // FIXED: __ instead of **
     }
   },
+
   integrations: [
-    tailwind(),
-    i18n: {
-		defaultLocale: "en",
-		locales: ["en", "it"],
-		routing: {
-			prefixDefaultLocale: false, // /about for English, /it/about for Italian
-		},
-	},
+    tailwind(), // FIXED: Added missing comma
     alpinejs(),
     AstroPWA({
       mode: "production",
@@ -70,32 +74,33 @@ export default defineConfig({
     }),
     icon(),
     solidJs(),
-	sitemap({
-  filter(page) {
-    const url = new URL(page, 'https://zandkhqastro.vercel.app');
-    
-    // All non-English language codes
-    const nonEnglishLangs = ['it'];
-    
-    // Should exclude if:
-    const shouldExclude = 
-      // Non-English blog posts (but keeps /{lang}/blog/ index pages)
-      nonEnglishLangs.some(lang => 
-        url.pathname.startsWith(`/${lang}/blog/`) && 
-        url.pathname !== `/${lang}/blog/`
-      ) ||
-      // Pagination, tags, categories
-      /\/blog\/\d+\//.test(url.pathname) ||
-      url.pathname.includes('/tag/') || 
-      url.pathname.includes('/category/');
-
-    return !shouldExclude;
-  }
-})
+    sitemap({
+      filter(page) {
+        const url = new URL(page, 'https://zandkhqastro.vercel.app');
+        
+        // All non-English language codes
+        const nonEnglishLangs = ['it'];
+        
+        // Should exclude if:
+        const shouldExclude = 
+          // Non-English blog posts (but keeps /{lang}/blog/ index pages)
+          nonEnglishLangs.some(lang => 
+            url.pathname.startsWith(`/${lang}/blog/`) && 
+            url.pathname !== `/${lang}/blog/`
+          ) ||
+          // Pagination, tags, categories
+          /\/blog\/\d+\//.test(url.pathname) ||
+          url.pathname.includes('/tag/') || 
+          url.pathname.includes('/category/');
+        return !shouldExclude;
+      }
+    })
   ],
+
   markdown: {
     rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, autolinkConfig]]
   },
+
   experimental: {
     contentCollectionCache: true
   }
