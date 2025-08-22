@@ -12,77 +12,78 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://zandkhqastro.vercel.app",
-	
-	// Add Astro's built-in i18n configuration
-	i18n: {
-		defaultLocale: "en",
-		locales: ["en", "it"],
-		routing: {
-			prefixDefaultLocale: false, // /about for English, /it/about for Italian
-		},
-	},
-	
-	vite: {
-		define: {
-			__DATE__: `'${new Date().toISOString()}'`, // Fixed: __ instead of **
-		},
-	},
-	integrations: [
-		tailwind(),
-		sitemap(),
-		// Remove astroI18next() - not needed anymore
-		alpinejs(),
-		solidJs(), // Added SolidJS integration
-		AstroPWA({
-			mode: "production",
-			base: "/",
-			scope: "/",
-			includeAssets: ["favicon.svg"],
-			registerType: "autoUpdate",
-			manifest: {
-				name: "Astros - Starter Template for Astro with Tailwind CSS",
-				short_name: "Astros",
-				theme_color: "#ffffff",
-				icons: [
-					{
-						src: "pwa-192x192.png",
-						sizes: "192x192",
-						type: "image/png",
-					},
-					{
-						src: "pwa-512x512.png",
-						sizes: "512x512",
-						type: "image/png",
-					},
-					{
-						src: "pwa-512x512.png",
-						sizes: "512x512",
-						type: "image/png",
-						purpose: "any maskable",
-					},
-				],
-			},
-			workbox: {
-				navigateFallback: "/404",
-				globPatterns: ["*.js"],
-			},
-			devOptions: {
-				enabled: false,
-				navigateFallbackAllowlist: [/^\/404$/],
-				suppressWarnings: true,
-			},
-		}),
-		icon(),
-	],
-	markdown: {
-		rehypePlugins: [
-			rehypeSlug,
-			// This adds links to headings
-			[rehypeAutolinkHeadings, autolinkConfig],
-		],
-	},
-	experimental: {
-		contentCollectionCache: true,
-	},
+  output: "server", // ya "hybrid"
+  site: "https://zandkhqastro.vercel.app",
+
+  // Add Astro's built-in i18n configuration
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "it"],
+    routing: {
+      prefixDefaultLocale: false, // /about for English, /it/about for Italian
+    },
+  },
+
+  vite: {
+    define: {
+      __DATE__: `'${new Date().toISOString()}'`, // Fixed: __ instead of **
+    },
+  },
+  integrations: [
+    tailwind(),
+    sitemap(),
+    // Remove astroI18next() - not needed anymore
+    alpinejs(),
+    solidJs(), // Added SolidJS integration
+    AstroPWA({
+      mode: "production",
+      base: "/",
+      scope: "/",
+      includeAssets: ["favicon.svg"],
+      registerType: "autoUpdate",
+      manifest: {
+        name: "Astros - Starter Template for Astro with Tailwind CSS",
+        short_name: "Astros",
+        theme_color: "#ffffff",
+        icons: [
+          {
+            src: "pwa-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+          {
+            src: "pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable",
+          },
+        ],
+      },
+      workbox: {
+        navigateFallback: "/404",
+        globPatterns: ["*.js"],
+      },
+      devOptions: {
+        enabled: false,
+        navigateFallbackAllowlist: [/^\/404$/],
+        suppressWarnings: true,
+      },
+    }),
+    icon(),
+  ],
+  markdown: {
+    rehypePlugins: [
+      rehypeSlug,
+      // This adds links to headings
+      [rehypeAutolinkHeadings, autolinkConfig],
+    ],
+  },
+  experimental: {
+    contentCollectionCache: true,
+  },
 });
