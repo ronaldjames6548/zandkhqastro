@@ -2,47 +2,65 @@ import type { APIRoute } from "astro";
 import { Downloader } from "@tobyg74/tiktok-api-dl";
 
 export const prerender = false;
-export const GET: APIRoute = async ({ request, url }) => {
+
+export const GET: APIRoute = async (context) => {
   try {
-    console.log("=== DIAGNOSTIC API ROUTE ===");
-    console.log("1. request.url:", request.url);
-    console.log("2. url object:", url);
-    console.log("3. url.href:", url.href);
-    console.log("4. url.search:", url.search);
-    console.log("5. url.searchParams:", url.searchParams);
+    console.log("=== ASTRO API DEBUG ===");
+    console.log("1. Full context:", Object.keys(context));
+    console.log("2. request.url:", context.request.url);
+    console.log("3. url object:", context.url);
     
-    // Try multiple ways to get the URL parameter
-    const method1 = new URL(request.url).searchParams.get("url");
-    const method2 = url.searchParams.get("url");
-    const method3 = new URLSearchParams(url.search).get("url");
+    // Try multiple ways to get URL parameters
+    const requestUrl = context.request.url;
+    const contextUrl = context.url;
     
-    console.log("6. Method 1 (new URL(request.url)):", method1);
-    console.log("7. Method 2 (url.searchParams):", method2);
-    console.log("8. Method 3 (URLSearchParams):", method3);
+    console.log("4. Trying URL parsing...");
     
-    // Get all search params to debug
-    console.log("9. All params (method 1):", Array.from(new URL(request.url).searchParams.entries()));
-    console.log("10. All params (method 2):", Array.from(url.searchParams.entries()));
+    // Method 1: Parse request.url directly  
+    let urlTik = "";
+    try {
+      const parsedUrl = new URL(requestUrl);
+      urlTik = parsedUrl.searchParams.get("url") || "";
+      console.log("5. Method 1 (request.url):", urlTik);
+    } catch (e) {
+      console.log("5. Method 1 failed:", e.message);
+    }
     
-    // Use the first method that works
-    const urlTik = method1 || method2 || method3 || "";
+    // Method 2: Use context.url
+    if (!urlTik && contextUrl) {
+      try {
+        urlTik = contextUrl.searchParams.get("url") || "";
+        console.log("6. Method 2 (context.url):", urlTik);
+      } catch (e) {
+        console.log("6. Method 2 failed:", e.message);
+      }
+    }
     
-    console.log("11. Final urlTik:", urlTik);
+    // Method 3: Parse manually from URL string
+    if (!urlTik) {
+      try {
+        const urlMatch = requestUrl.match(/[?&]url=([^&]*)/);
+        if (urlMatch) {
+          urlTik = decodeURIComponent(urlMatch[1]);
+          console.log("7. Method 3 (regex):", urlTik);
+        }
+      } catch (e) {
+        console.log("7. Method 3 failed:", e.message);
+      }
+    }
+    
+    console.log("8. Final urlTik:", urlTik);
 
     if (!urlTik) {
-      console.log("12. ERROR: No URL parameter found with any method");
+      console.log("9. ERROR: No URL parameter found with any method");
       return new Response(JSON.stringify({ 
         error: "url is required",
         status: "error",
         debug: {
-          requestUrl: request.url,
-          urlHref: url.href,
-          urlSearch: url.search,
-          method1,
-          method2,
-          method3,
-          allParams1: Array.from(new URL(request.url).searchParams.entries()),
-          allParams2: Array.from(url.searchParams.entries())
+          requestUrl: requestUrl,
+          contextUrl: contextUrl ? contextUrl.href : null,
+          contextSearch: contextUrl ? contextUrl.search : null,
+          tried: ["new URL(request.url)", "context.url", "regex parsing"]
         }
       }), {
         status: 400,
@@ -54,7 +72,7 @@ export const GET: APIRoute = async ({ request, url }) => {
 
     // Validate TikTok URL format
     if (!urlTik.includes("tiktok.com") && !urlTik.includes("douyin")) {
-      console.log("13. ERROR: Invalid TikTok URL format");
+      console.log("10. ERROR: Invalid TikTok URL format");
       return new Response(JSON.stringify({ 
         error: "Invalid TikTok URL format",
         status: "error" 
@@ -66,7 +84,7 @@ export const GET: APIRoute = async ({ request, url }) => {
       });
     }
 
-    console.log("14. URL validation passed, calling TikTok API...");
+    console.log("11. URL validation passed, calling TikTok API...");
 
     // Handle douyin URLs
     let processedUrl = urlTik;
@@ -78,24 +96,23 @@ export const GET: APIRoute = async ({ request, url }) => {
         }).then((response) => {
           return response.url.replace("douyin", "tiktok");
         });
-        console.log("15. Processed douyin URL:", processedUrl);
+        console.log("12. Processed douyin URL:", processedUrl);
       } catch (e) {
         console.error("Error processing douyin URL:", e);
       }
     }
 
     // Call the TikTok downloader
-    console.log("16. Calling Downloader with URL:", processedUrl);
+    console.log("13. Calling Downloader with URL:", processedUrl);
     let data = await Downloader(processedUrl, {
       version: "v3",
     });
 
-    console.log("17. TikTok API response status:", data?.status);
-    console.log("18. TikTok API response:", JSON.stringify(data, null, 2));
+    console.log("14. TikTok API response status:", data?.status);
 
     // Check if the response is successful
     if (!data || data.status === "error") {
-      console.log("19. ERROR: TikTok API returned error");
+      console.log("15. ERROR: TikTok API returned error");
       return new Response(JSON.stringify({ 
         error: data?.message || "Failed to fetch video data",
         status: "error"
@@ -109,7 +126,7 @@ export const GET: APIRoute = async ({ request, url }) => {
 
     // Validate response structure
     if (!data.result) {
-      console.log("20. ERROR: No result data in response");
+      console.log("16. ERROR: No result data in response");
       return new Response(JSON.stringify({ 
         error: "Invalid response format - missing result data",
         status: "error"
@@ -142,7 +159,7 @@ export const GET: APIRoute = async ({ request, url }) => {
       };
     }
 
-    console.log("21. SUCCESS: Returning processed data");
+    console.log("17. SUCCESS: Returning processed data");
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: {
