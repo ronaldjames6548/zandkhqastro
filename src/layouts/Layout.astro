@@ -20,14 +20,17 @@ export interface Props {
 	lang?: string;
 }
 
-// Get current language and translations
-const currentLang = getLangFromUrl(Astro.url || { pathname: '/' });
+// Create safe URL object to prevent undefined errors during build
+const safeUrl = Astro.url || { pathname: '/' } as URL;
+
+// Get current language and translations - using safe URL
+const currentLang = getLangFromUrl(safeUrl);
 const t = useTranslations(currentLang);
 
 // Use provided lang or detect from URL
 const pageLang = Astro.props.lang || currentLang;
 
-const canonicalURL = new URL(Astro.url?.pathname || '/', Astro.site).toString();
+const canonicalURL = new URL(safeUrl.pathname || '/', Astro.site).toString();
 const resolvedImageWithDomain = new URL(
 	"/meta/opengraph.png",
 	Astro.site,
@@ -40,7 +43,7 @@ const makeTitle = title
 
 // Generate hreflang links for all supported languages
 function generateHrefLangs() {
-	const currentPath = Astro.url?.pathname || '/';
+	const currentPath = safeUrl.pathname || '/';
 	
 	// Remove language prefix to get base path
 	let basePath = currentPath;
