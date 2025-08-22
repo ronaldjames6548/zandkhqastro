@@ -8,7 +8,7 @@ interface TikTokData {
     author: {
       avatar: string | null;
       nickname: string | null;
-    };
+    } | null;
     desc: string | null;
     videoSD: string | null;
     videoHD: string | null;
@@ -16,11 +16,10 @@ interface TikTokData {
     videoWatermark: string | null;
     music: string | null;
     uploadDate?: string | null;
-  };
+  } | null;
 }
 
 type Props = {};
-
 
 function InputScreen({}: Props) {
   const [url, setUrl] = createSignal("");
@@ -31,15 +30,31 @@ function InputScreen({}: Props) {
 
   const fetchData = async () => {
     setLoading(true);
+    setError("");
+    
     try {
       let res = await fetch(`/api/tik.json?url=${encodeURIComponent(url())}`);
       let json = await res.json();
-      if (json.status == "error") throw new Error(json.message);
-      setData(json ?? null);
+      
+      // Debug: Log the response
+      console.log("API Response:", json);
+      
+      // Check for error status
+      if (json.status === "error" || !json.result) {
+        throw new Error(json.error || json.message || "Failed to fetch video data");
+      }
+
+      // Validate required data exists
+      if (!json.result) {
+        throw new Error("No video data found");
+      }
+
+      setData(json);
       loadAd();
       setError("");
     } catch (error) {
-      toast.error(error.message, {
+      console.error("Fetch error:", error);
+      toast.error(error.message || "An error occurred while fetching data", {
         duration: 3000,
         position: "bottom-center",
         style: {
@@ -47,6 +62,7 @@ function InputScreen({}: Props) {
         },
       });
       setData(null);
+      setError(error.message);
     }
     setLoading(false);
   };
@@ -135,6 +151,21 @@ function InputScreen({}: Props) {
     if (script) script.remove();
   });
 
+  // Helper function to get video URL safely
+  const getVideoUrl = () => {
+    const result = data()?.result;
+    return result?.videoSD || result?.videoHD || result?.video_hd || result?.videoWatermark || result?.music || "";
+  };
+
+  // Helper function to get author info safely
+  const getAuthorInfo = () => {
+    const author = data()?.result?.author;
+    return {
+      avatar: author?.avatar || "",
+      nickname: author?.nickname || "Unknown Author"
+    };
+  };
+
   return (
     <div class="max-w-6xl mx-auto mt-8 px-4">
       <Toaster />
@@ -189,28 +220,53 @@ function InputScreen({}: Props) {
         </div>
       )}
 
-      {data() && (
+      {error() && (
+        <div class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+          Error: {error()}
+        </div>
+      )}
+
+      {data() && data()?.result && (
         <div class="mt-6">
           <div class="mt-4 max-w-6xl mx-auto">
             <div class="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-lg overflow-hidden backdrop-blur-sm border border-white/10 p-4">
               <div class="flex flex-col md:flex-row gap-4">
                 <div class="md:w-1/3 flex-shrink-0">
                   <div class="relative rounded-lg overflow-hidden max-h-[430px]">
-                    <video controls src={data()!.result.videoSD || data()!.result.videoHD || data()!.result.videoWatermark || data()!.result.music || ""} class="w-full h-full object-cover" referrerpolicy="no-referrer"></video>
+                    {getVideoUrl() && (
+                      <video 
+                        controls 
+                        src={getVideoUrl()} 
+                        class="w-full h-full object-cover" 
+                        referrerpolicy="no-referrer"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
                   </div>
                 </div>
 
                 <div class="md:w-2/3 flex flex-col justify-between">
                   <div class="mb-3">
                     <div class="flex items-center gap-3 justify-between mb-1">
-                      <img src={data()!.result.author.avatar || ""}
-                        alt={data()!.result.author.nickname || ""}
-                        class="rounded-full w-24 h-24"
-                      />
-                      <h2 class="text-xl font-bold text-gray-900 dark:text-white">{data()!.result.author.nickname}</h2>
+                      {getAuthorInfo().avatar && (
+                        <img 
+                          src={getAuthorInfo().avatar}
+                          alt={getAuthorInfo().nickname}
+                          class="rounded-full w-24 h-24"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      )}
+                      <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                        {getAuthorInfo().nickname}
+                      </h2>
                       <div class="text-gray-400 text-xs px-2 py-1 bg-white/10 rounded-full"></div>
                     </div>
-                    <div class="text-gray-400 text-xs mb-2">{data()!.result.desc}</div>
+                    <div class="text-gray-400 text-xs mb-2">
+                      {data()?.result?.desc || "No description available"}
+                    </div>
                     
                     {/* Ad Banner Container */}
                     <div class="flex justify-center my-4">
@@ -225,32 +281,41 @@ function InputScreen({}: Props) {
                   </div>
 
                   <div class="space-y-2">
-                    <button class="download-button bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                      </svg> 
-                      {data()!.result.videoSD && (
-                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoSD)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download SD (No Watermark)</a>
-                      )}
-                    </button>
-                    <button class="download-button bg-gradient-to-r from-pink-600 to-pink-400 hover:from-pink-500 hover:to-pink-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                      </svg> 
-                      {data()!.result.videoHD && (
-                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoHD)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download HD (No Watermark)</a>
-                      )}
-                    </button>
-                    <button class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                      </svg> 
-                      {data()!.result.videoWatermark && (
-                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoWatermark)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download (With Watermark)</a>
-                      )}
-                    </button>
-                    <button class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300">
-                      <a href="/" class="btn">Download Another Video</a> 
+                    {data()?.result?.videoSD && (
+                      <button class="download-button bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 w-full p-3 rounded-lg text-white flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg> 
+                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result!.videoSD!)}&type=.mp4&title=${getAuthorInfo().nickname}`} class="text-white no-underline">
+                          Download SD (No Watermark)
+                        </a>
+                      </button>
+                    )}
+
+                    {data()?.result?.videoHD && (
+                      <button class="download-button bg-gradient-to-r from-pink-600 to-pink-400 hover:from-pink-500 hover:to-pink-300 w-full p-3 rounded-lg text-white flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg> 
+                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result!.videoHD!)}&type=.mp4&title=${getAuthorInfo().nickname}`} class="text-white no-underline">
+                          Download HD (No Watermark)
+                        </a>
+                      </button>
+                    )}
+
+                    {data()?.result?.videoWatermark && (
+                      <button class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 w-full p-3 rounded-lg text-white flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                        </svg> 
+                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result!.videoWatermark!)}&type=.mp4&title=${getAuthorInfo().nickname}`} class="text-white no-underline">
+                          Download (With Watermark)
+                        </a>
+                      </button>
+                    )}
+
+                    <button class="download-button bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-500 hover:to-purple-300 w-full p-3 rounded-lg text-white flex items-center justify-center">
+                      <a href="/" class="text-white no-underline">Download Another Video</a> 
                     </button>
                   </div>
                 </div>
