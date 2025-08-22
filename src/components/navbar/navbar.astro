@@ -1,9 +1,25 @@
 ---
 import Button from "@components/ui/button.astro";
 import Link from "@components/ui/link.astro";
-import { localizePath } from "astro-i18next";
+
+// Remove old astro-i18next imports
+// import { localizePath } from "astro-i18next";
+// import { t } from "i18next";
+
+// Add new built-in i18n imports
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import { Icon } from "astro-icon/components";
-import { t } from "i18next";
+
+// Get current language and create translation function
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Helper function to create localized paths
+function localizePath(path: string) {
+	if (!path || path.startsWith('http') || path === '#') return path;
+	return getRelativeLocaleUrl(lang, path);
+}
 
 export const menuitems = [
 	{
@@ -107,17 +123,19 @@ export const menuitems = [
 											class="block"
 											x-data="{ isActive: false }"
 											x-init={`() => {
-												const path = $el.getAttribute('data-path');
 												const checkSubPath = () => {
-													isActive = window.location.pathname === path ||
-																window.location.pathname === path + '/' ||
-																window.location.pathname === '/it' + path ||
-																window.location.pathname === '/it' + path + '/';
+													const currentPath = window.location.pathname;
+													const targetPath = '${subitem.path}';
+													// Check for exact match, with trailing slash, and with language prefix
+													isActive = currentPath === targetPath ||
+																currentPath === targetPath + '/' ||
+																currentPath === '/it' + targetPath ||
+																currentPath === '/it' + targetPath + '/';
 												};
+												checkSubPath();
 												document.removeEventListener('astro:page-load', checkSubPath);
 												document.addEventListener('astro:page-load', checkSubPath);
-											}`}
-											x-bind:class="{ 'bg-gray-200 dark:bg-gray-600': isActive }">
+											}`}>
 											{subitem.title}
 										</Link>
 									))}
@@ -131,13 +149,16 @@ export const menuitems = [
 							size="sm"
 							x-data="{ isActive: false }"
 							x-init={`() => {
-								const path = $el.getAttribute('data-path');
 								const checkPath = () => {
-									isActive = window.location.pathname === path ||
-												window.location.pathname === path + '/' ||
-												window.location.pathname === '/it' + path ||
-												window.location.pathname === '/it' + path + '/';
+									const currentPath = window.location.pathname;
+									const targetPath = '${item.path}';
+									// Check for exact match, with trailing slash, and with language prefix
+									isActive = currentPath === targetPath ||
+												currentPath === targetPath + '/' ||
+												currentPath === '/it' + targetPath ||
+												currentPath === '/it' + targetPath + '/';
 								};
+								checkPath();
 								document.removeEventListener('astro:page-load', checkPath);
 								document.addEventListener('astro:page-load', checkPath);
 							}`}

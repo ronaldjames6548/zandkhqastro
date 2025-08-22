@@ -1,5 +1,10 @@
 ---
-import { localizePath } from "astro-i18next";
+// Remove old astro-i18next import
+// import { localizePath } from "astro-i18next";
+
+// Add new built-in i18n imports
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import { Icon } from "astro-icon/components";
 
 export interface Props {
@@ -7,6 +12,16 @@ export interface Props {
 }
 
 const { posts } = Astro.props;
+
+// Get current language and create translation function
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Helper function to create localized paths
+function localizePath(path: string) {
+	if (!path || path.startsWith('http') || path === '#') return path;
+	return getRelativeLocaleUrl(lang, path);
+}
 ---
 
 <section class="mx-auto max-w-7xl">
@@ -21,7 +36,6 @@ const { posts } = Astro.props;
 					/>
 					<div class="absolute inset-0 -z-10 bg-gradient-to-t from-gray-900 via-gray-900/40" />
 					<div class="absolute inset-0 -z-10 rounded-2xl ring-1 ring-inset ring-gray-900/10" />
-
 					<div class="flex flex-wrap items-center gap-y-1 overflow-hidden text-sm leading-6 text-gray-300">
 						<time datetime={blogPostEntry.data.publishDate.toDateString()} class="mr-8">
 							{blogPostEntry.data.publishDate.toDateString()}
@@ -36,14 +50,12 @@ const { posts } = Astro.props;
 							</div>
 						</div>
 					</div>
-
 					<h3 class="mt-3 text-lg font-semibold leading-6 text-white">
 						<a href={`${localizePath(`blog/${blogPostEntry.slug.split("/").slice(1).join("/")}`)}`}>
 							<span class="absolute inset-0" />
 							{blogPostEntry.data.title}
 						</a>
 					</h3>
-
 					<h4 class="pt-3 text-xs font-medium text-gray-300 uppercase tracking-wider">
 						<a href={localizePath(`/category/${blogPostEntry.data.category?.toLowerCase()}`)}>{blogPostEntry.data.category}</a>
 					</h4>

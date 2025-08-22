@@ -1,9 +1,24 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { localizePath } from "astro-i18next";
-import { changeLanguage } from "i18next";
 
-changeLanguage("it");
+// Remove old astro-i18next imports
+// import { localizePath } from "astro-i18next";
+// import { changeLanguage } from "i18next";
+// changeLanguage("it");
+
+// Add new built-in i18n imports
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+// Get current language and create translation function
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Helper function to create localized paths
+function localizePath(path: string) {
+	if (!path || path.startsWith('http') || path === '#') return path;
+	return getRelativeLocaleUrl(lang, path);
+}
 
 const title = `Error 404`;
 ---

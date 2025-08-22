@@ -1,5 +1,10 @@
 ---
-import { localizePath } from "astro-i18next";
+// Remove old astro-i18next import
+// import { localizePath } from "astro-i18next";
+
+// Add new built-in i18n imports
+import { getLangFromUrl } from "../i18n/utils";
+import { getRelativeLocaleUrl } from "astro:i18n";
 
 interface Props {
 	href: string;
@@ -18,6 +23,15 @@ const {
 	class: className,
 	...rest
 } = Astro.props;
+
+// Get current language
+const lang = getLangFromUrl(Astro.url);
+
+// Helper function to create localized paths
+function localizePath(path: string) {
+	if (!path || path.startsWith('http') || path === '#') return path;
+	return getRelativeLocaleUrl(lang, path);
+}
 
 const sizes = {
 	xs: "",

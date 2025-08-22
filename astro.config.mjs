@@ -4,7 +4,7 @@ import sitemap from "@astrojs/sitemap";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { autolinkConfig } from "./plugins/rehype-autolink-config";
 import rehypeSlug from "rehype-slug";
-import astroI18next from "astro-i18next";
+// Remove astroI18next import - not needed anymore
 import alpinejs from "@astrojs/alpinejs";
 import AstroPWA from "@vite-pwa/astro";
 import icon from "astro-icon";
@@ -12,6 +12,16 @@ import icon from "astro-icon";
 // https://astro.build/config
 export default defineConfig({
 	site: "https://astros.zank.studio",
+	
+	// Add Astro's built-in i18n configuration
+	i18n: {
+		defaultLocale: "en",
+		locales: ["en", "it"],
+		routing: {
+			prefixDefaultLocale: false, // /about for English, /it/about for Italian
+		},
+	},
+	
 	vite: {
 		define: {
 			__DATE__: `'${new Date().toISOString()}'`,
@@ -20,7 +30,7 @@ export default defineConfig({
 	integrations: [
 		tailwind(),
 		sitemap(),
-		astroI18next(),
+		// Remove astroI18next() - not needed anymore
 		alpinejs(),
 		AstroPWA({
 			mode: "production",

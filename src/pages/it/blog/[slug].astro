@@ -3,21 +3,28 @@ import { getCollection } from "astro:content";
 import Container from "@components/container.astro";
 import Layout from "@layouts/Layout.astro";
 import { getArticleReadingTime } from "@utils/blog";
-import { localizePath } from "astro-i18next";
-import { Icon } from "astro-icon/components";
-import i18next, { changeLanguage } from "i18next";
 
-changeLanguage("it");
+// Remove old astro-i18next imports
+// import { localizePath } from "astro-i18next";
+// import i18next, { changeLanguage } from "i18next";
+// changeLanguage("it");
+
+// Add new built-in i18n imports
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { Icon } from "astro-icon/components";
 
 // Generate a new path for every collection post
 export async function getStaticPaths() {
-	changeLanguage("it");
 	const blogEntries = await getCollection("blog");
-	var localizedBlogEntries = blogEntries.filter((entry) =>
-		entry.slug.startsWith(i18next.language),
+	// Filter for Italian blog posts (posts starting with "it/")
+	const localizedBlogEntries = blogEntries.filter((entry) =>
+		entry.slug.startsWith("it/")
 	);
+	
 	return localizedBlogEntries.map((post) => {
 		let slug = post.slug;
+		// Remove the "it/" prefix and any "blog/" if present
 		slug = slug.substring(3).replaceAll("blog/", "");
 		return {
 			params: { slug: slug },
@@ -25,11 +32,22 @@ export async function getStaticPaths() {
 		};
 	});
 }
+
 // Get the post directly from the prop on render
-const { post, lang } = Astro.props;
+const { post } = Astro.props;
 const { data, render } = post;
 const { Content } = await render();
 const readTime = getArticleReadingTime(post.body);
+
+// Get current language and create translation function
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Helper function to create localized paths
+function localizePath(path: string) {
+	if (!path || path.startsWith('http') || path === '#') return path;
+	return getRelativeLocaleUrl(lang, path);
+}
 ---
 
 <Layout title={post.data.title} lang={lang}>
@@ -96,7 +114,7 @@ const readTime = getArticleReadingTime(post.body);
 					script.dataset.emitMetadata = '0';
 					script.dataset.inputPosition = 'top';
 					script.dataset.theme = localStorage.theme == 'dark' ? 'dark' : localStorage.theme == 'light' ? 'light' : 'preferred_color_scheme';
-					script.dataset.lang = 'en';
+					script.dataset.lang = 'it';
 					script.dataset.loading = 'lazy';
 					script.crossOrigin = 'anonymous';
 					script.async = true;

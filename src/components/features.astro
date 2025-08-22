@@ -1,9 +1,25 @@
 ---
 import Link from "@components/ui/link.astro";
-import { localizePath } from "astro-i18next";
+// Remove old astro-i18next imports
+// import { localizePath } from "astro-i18next";
+// import { t } from "i18next";
+
+// Add new built-in i18n imports
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import { getRelativeLocaleUrl } from "astro:i18n";
+
 // @ts-ignore
 import { Icon } from "astro-icon/components";
-import { t } from "i18next";
+
+// Get current language and create translation function
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Helper function to create localized paths (if needed)
+function localizePath(path: string) {
+	if (!path || path.startsWith('http') || path === '#') return path;
+	return getRelativeLocaleUrl(lang, path);
+}
 
 const features = [
 	{
@@ -52,7 +68,7 @@ const features = [
 		title: "RSS feed",
 		description: "features.rss",
 		icon: "bx:bxs-user",
-		url: "/rss.xml",
+		url: localizePath("/rss.xml"),
 	},
 	{
 		title: "Article generator (soon)",
