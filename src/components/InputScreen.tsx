@@ -37,7 +37,7 @@ function InputScreen({}: Props) {
       console.log("Original URL:", tiktokUrl);
       console.log("Encoded URL:", encodeURIComponent(tiktokUrl));
       
-      const apiUrl = `/api/tik.json?url=${encodeURIComponent(tiktokUrl)}`;
+      const apiUrl = `/api/test.json?url=${encodeURIComponent(tiktokUrl)}`;
       console.log("API URL:", apiUrl);
       
       let res = await fetch(apiUrl);
