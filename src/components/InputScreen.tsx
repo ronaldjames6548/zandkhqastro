@@ -1,199 +1,266 @@
-// {
-// "status": "success",
-// "result": {
-// "type": "video",
-// "author": {
-// "avatar": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/a722dee32f65207d0516eb1bb3f3ae25~c5_300x300.jpeg?lk3s=45126217&nonce=60751&refresh_token=045dc00c8c2cba2161b9a09c0106d083&x-expires=1713546000&x-signature=EGRuOabw0Zyw88WVr2aBLSf6wnA%3D",
-// "nickname": "sadarjiwa01"
-// },
-// "desc": "Terima kasih atas kerja kerasmu pak #jokowi #jokowidodo #fypシ゚viral #sadstory #sadvibes #foryoupage",
-// "music": "https://sf16-ies-music-va.tiktokcdn.com/obj/musically-maliva-obj/7267457587866897157.mp3",
-// "video1": "https://fastdl.muscdn.app/dl?url=aHR0cHM6Ly92MTZtLWRlZmF1bHQuYWthbWFpemVkLm5ldC8wZWI0N2FhMGI4NWIxNjcxYTAzMWYwNjE2ZWNmNTRjYS82NjIxYWFhZC92aWRlby90b3MvdXNlYXN0MmEvdG9zLXVzZWFzdDJhLXZlLTAwNjhjMDAzL29vQTlDN1VlV1hJSGZrRmtFS0dYNGVMb2FlTnJBQVNnQzhSY1JKLz9hPTAmYnRpPU9VQnpPVGc3UUdvNk9qWkFMM0FqTFRBellDTXhORE5nJmNoPTAmY3I9MCZkcj0wJmxyPWFsbCZjZD0wJTdDMCU3QzAlN0MwJmJyPTIwMzYmYnQ9MTAxOCZjcz0wJmRzPTYmZnQ9WEU1YkNxVDBtN2pQRDEyODl5cjczd1VXckl5S01lRn5PNSZtaW1lX3R5cGU9dmlkZW9fbXA0JnFzPTAmcmM9WldZOE0yWTFaenMyWnp0b05EczdQRUJwYW1sa08yNDVjbkYwY1RNek56Z3pNMEF3TmpaaE1UVTJYelF4TlRVdE1ERXVZU05lY0RGa01tUmpOR2xnTFMxa0x6WnpjdyUzRCUzRCZ2dnBsPTEmbD0yMDI0MDQxODE3MTkxNTI2NzQ4MEU1ODk5Q0NDM0RFODQzJmJ0YWc9ZTAwMDg4MDAw&name=c2FkYXJqaXdhMDE=&id=NzM3NTIwMjU2Ng==&type=mp4",
-// "video2": "https://v16m-default.akamaized.net/0eb47aa0b85b1671a031f0616ecf54ca/6621aaad/video/tos/useast2a/tos-useast2a-ve-0068c003/ooA9C7UeWXIHfkFkEKGX4eLoaeNrAASgC8RcRJ/?a=0&bti=OUBzOTg7QGo6OjZAL3AjLTAzYCMxNDNg&ch=0&cr=0&dr=0&lr=all&cd=0%7C0%7C0%7C0&br=2036&bt=1018&cs=0&ds=6&ft=XE5bCqT0m7jPD1289yr73wUWrIyKMeF~O5&mime_type=video_mp4&qs=0&rc=ZWY8M2Y1Zzs2ZztoNDs7PEBpamlkO245cnF0cTMzNzgzM0AwNjZhMTU2XzQxNTUtMDEuYSNecDFkMmRjNGlgLS1kLzZzcw%3D%3D&vvpl=1&l=20240418171915267480E5899CCC3DE843&btag=e00088000",
-// "video_hd": "https://dl.muscdn.app/c2FkYXJqaXdhMDE=/hd/aHR0cHM6Ly92MTZtLWRlZmF1bHQuYWthbWFpemVkLm5ldC9iODI3MTI0NmIzZjI2NTIxNDdmMDk1YWZiMmRiNTliZC82NjIxYWFhZC92aWRlby90b3MvdXNlYXN0MmEvdG9zLXVzZWFzdDJhLXYtMDA2OC9vSUFpb2QyZ0JFRDlWcjBIQXVpQWtnS3VQQWZpeUFnRWlHb2dCOS8/YT0wJmJ0aT1iR1J1Wkh4dk1YSXhjbTUzWm0xY1lGOWViV0Z6YUhGbU9nJTNEJTNEJmNoPTAmY3I9MCZkcj0wJmVyPTAmY2Q9MCU3QzAlN0MwJTdDMCZicj0yNDY4MCZidD0xMjM0MCZkcz00JmZ0PWFFS3BDcVQwbTdqUEQxMjg5eXI3M3dVV3JJeUtNZUZ+TzUmbWltZV90eXBlPXZpZGVvX21wNCZxcz0xMyZyYz1hbWxrTzI0NWNuRjBjVE16Tnpnek0wQnBhbWxrTzI0NWNuRjBjVE16Tnpnek0wQmVjREZrTW1Sak5HbGdMUzFrTHpaellTTmVjREZrTW1Sak5HbGdMUzFrTHpaemN3JTNEJTNEJnZ2cGw9MSZsPTIwMjQwNDE4MTcxOTE1OEM4REMzNDAxNDIzMDEzQ0VDREYmYnRhZz1lMDAwNDgwMDAmY2M9Mw==",
-// "video_watermark": "https://fastdl.muscdn.app/dl?url=aHR0cHM6Ly92MTZtLWRlZmF1bHQuYWthbWFpemVkLm5ldC9iZWRiNmU2MzUxNTYxYjgzMTMyYzVjNDZhZTcxMGE5ZS82NjIxYWFhZC92aWRlby90b3MvdXNlYXN0MmEvdG9zLXVzZWFzdDJhLXZlLTAwNjhjMDAyL29jNElBWHJRQ0tMUkZIWHFDTG83SkJJU1hHU2Zla0FlV2dFZXZrLz9hPTAmYnRpPU9VQnpPVGc3UUdvNk9qWkFMM0FqTFRBellDTXhORE5nJmNoPTAmY3I9MCZkcj0wJmxyPWFsbCZjZD0wJTdDMCU3QzAlN0MwJmJyPTI2MDQmYnQ9MTMwMiZjcz0wJmRzPTMmZnQ9WEU1YkNxVDBtN2pQRDEyODl5cjczd1VXckl5S01lRn5PNSZtaW1lX3R5cGU9dmlkZW9fbXA0JnFzPTAmcmM9YURvNU5UUmtOMlE2TkR4b04yazZQRUJwYW1sa08yNDVjbkYwY1RNek56Z3pNMEF5TmpVdU1HSXlYeTR4TkRFeFhtTmpZU05lY0RGa01tUmpOR2xnTFMxa0x6WnpjdyUzRCUzRCZ2dnBsPTEmbD0yMDI0MDQxODE3MTkxNTI2NzQ4MEU1ODk5Q0NDM0RFODQzJmJ0YWc9ZTAwMDg4MDAw&name=c2FkYXJqaXdhMDE=&id=NzM3NTIwMjU2Ng==&type=mp4"
-// }
-// }
+import { toast, Toaster } from "solid-toast";
+import { createSignal, onCleanup } from "solid-js";
 
-// Path: src/pages/api/tik.json.ts
-import { toast, Toaster } from 'solid-toast';
-
-
-import { createSignal } from "solid-js";
-type Props = {}
 interface TikTokData {
-    status: string | null;
-    result: {
-        type: string | null;
-        author: {
-            avatar: string | null;
-            nickname: string | null;
-        };
-        desc: string | null;
-        music: string | null;
-        video1: string | null;
-        video2: string | null;
-        video_hd: string | null;
-        video_watermark: string | null;
-    }
+  status: string | null;
+  result: {
+    type: string | null;
+    author: {
+      avatar: string | null;
+      nickname: string | null;
+    };
+    desc: string | null;
+    videoSD: string | null;
+    videoHD: string | null;
+    video_hd: string | null;
+    videoWatermark: string | null;
+    music: string | null;
+    uploadDate?: string | null;
+  };
 }
 
-function InputScreen({ }: Props) {
+type Props = {};
 
-    const [url, setUrl] = createSignal("");
-    const [data, setData] = createSignal<TikTokData | null>(null);
-    const [loading, setLoading] = createSignal(false);
-    const [error, setError] = createSignal("");
-    let fetchData = async () => {
-        setLoading(true)
-        try {
-            let res = await fetch(`/api/tik.json?url=${url()}`)
-            let json = await res.json()
-            if (json.status == "error") {
-                throw new Error(json.message)
+function InputScreen({}: Props) {
+  const [url, setUrl] = createSignal("");
+  const [data, setData] = createSignal<TikTokData | null>(null);
+  const [loading, setLoading] = createSignal(false);
+  const [error, setError] = createSignal("");
+  const [adLoaded, setAdLoaded] = createSignal(false);
 
-            } else {
-                setData(json ?? null)
-                setError("")
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      let res = await fetch(`/api/tik.json?url=${encodeURIComponent(url())}`);
+      let json = await res.json();
+      if (json.status == "error") throw new Error(json.message);
+      setData(json ?? null);
+      loadAd();
+      setError("");
+    } catch (error) {
+      toast.error(error.message, {
+        duration: 3000,
+        position: "bottom-center",
+        style: {
+          "font-size": "16px",
+        },
+      });
+      setData(null);
+    }
+    setLoading(false);
+  };
 
-            }
+  const handlePaste = async () => {
+    try {
+      const permission = await navigator.permissions.query({ name: 'clipboard-read' as any });
+      if (permission.state === 'granted' || permission.state === 'prompt') {
+        const text = await navigator.clipboard.readText();
+        setUrl(text);
+      }
+    } catch (err) {
+      toast.error("Clipboard access denied");
+    }
+  };
 
-            setLoading(false)
-        } catch (error) {
-            toast.error(error.message, {
-                duration: 3000,
-                position: 'bottom-center',
-                style: {
-                    'font-size': '16px',
-                },
-            });
-            setData(null)
-            // setError(error.message)
+  const loadAd = () => {
+    const adContainer = document.getElementById("ad-banner");
+    if (!adContainer) return;
 
+    // Clear previous content
+    adContainer.innerHTML = '';
+
+    // Create the AC script if it doesn't exist
+    if (!document.getElementById("aclib")) {
+      const script = document.createElement("script");
+      script.id = "aclib";
+      script.src = "[invalid url, do not cite]
+      script.async = true;
+      script.onload = () => {
+        if (typeof aclib !== 'undefined') {
+          runAdcashBanner();
+        } else {
+          showFallbackAd();
         }
-        setLoading(false)
+      };
+      script.onerror = () => {
+        showFallbackAd();
+      };
+      document.body.appendChild(script);
+    } else {
+      // Script already exists, just run the banner
+      if (typeof aclib !== 'undefined') {
+        runAdcashBanner();
+      } else {
+        showFallbackAd();
+      }
     }
-    return (
-        <div>
-            <Toaster />
-            <div
-                id="form"
-                class="text-gray-600 h-14 border-[1px] border-blue-500 shadow-md rounded-lg flex items-center my-3"
-            >
-                <input
-                    x-ref="input"
-                    placeholder="Enter Tiktok URL"
-                    class="bg-transparent text-m w-full pl-2 font-semibold h-full rounded-full text-sm focus:outline-none text-black"
-                    required={true}
-                    type="text"
-                    onChange={(e) => setUrl(e.currentTarget.value)}
-                    value={url()}
-                />
-                <button
-                    onclick={async (e) => {
-                        e.preventDefault();
+  };
 
-                        //ask for permission to access clipboard readText
-                        await navigator.permissions.query({ name: 'clipboard-read' as any }).then((result) => {
-                            if (result.state == 'granted' || result.state == 'prompt') {
-                                navigator.clipboard.readText().then((text) => {
-                                    setUrl(text);
-                                });
-                            }
-                        });
+  const runAdcashBanner = () => {
+    const adContainer = document.getElementById("ad-banner");
+    if (!adContainer) return;
 
-                        navigator.clipboard.readText().then((text) => {
-                            setUrl(text);
-                        });
-                    }}
-                    class="flex justify-center items-center p-2 border-[1px] text-xs font-semibold shadow-md mr-2 rounded-md dark:bg-blue-600 dark:text-white"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 60 58"
-                    class='fill-current dark:text-white'
-                    >
-                        <path d="M17.5 12h17c.8 0 1.5-.7 1.5-1.5V6c0-2.2-1.8-4-4-4H20c-2.2 0-4 1.8-4 4v4.5c0 .8.7 1.5 1.5 1.5z"></path>
-                        <path d="M44 6h-2.5c-.8 0-1.5.7-1.5 1.5V12c0 2.2-1.8 4-4 4H16c-2.2 0-4-1.8-4-4V7.5c0-.8-.7-1.5-1.5-1.5H8c-2.2 0-4 1.8-4 4v36c0 2.2 1.8 4 4 4h36c2.2 0 4-1.8 4-4V10c0-2.2-1.8-4-4-4zm-6 35c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2zm0-8c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2zm0-8c0 .6-.4 1-1 1H15c-.6 0-1-.4-1-1v-2c0-.6.4-1 1-1h22c.6 0 1 .4 1 1v2z"></path>
-                    </svg>
-                    Paste
-                </button>
-                <button
-                    onclick={(e) => {
-                        e.preventDefault();
-                        if (url() == '') {
-                            toast.error('Please enter a valid url or username', {
-                                duration: 3000,
-                                position: 'bottom-center',
-                                style: {
-                                    'font-size': '16px',
-                                },
-                            });
-                        } else {
-                            fetchData();
-                        }
-                    }}
-                    class="mr-2 p-1 bg-blue-600 shadow-md h-10 rounded text-white"
-                >
-                    <span class="px-1 flex items-center font-medium tracking-wide"> Download </span>
-                </button>
-            </div>
+    try {
+      adContainer.innerHTML = '<div id="ac-banner"></div>';
+      aclib.runBanner({
+        zoneId: '9480206',
+        width: 336,
+        height: 280,
+        container: document.getElementById("ac-banner")
+      });
+      setAdLoaded(true);
+    } catch (e) {
+      console.error("Adcash error:", e);
+      showFallbackAd();
+    }
+  };
 
-            {loading() && <div class='flex justify-center'><svg
-            class=" -ml-1 mr-3 h-10 w-10  text-center"
-            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" width="200" height="200" style="shape-rendering: auto; display: block; background: transparent;"><g><circle cx="84" cy="50" r="10" fill="#527eff">
-                <animate attributeName="r" repeatCount="indefinite" dur="0.25s" calcMode="spline" keyTimes="0;1" values="10;0" keySplines="0 0.5 0.5 1" begin="0s" />
-                <animate attributeName="fill" repeatCount="indefinite" dur="1s" calcMode="discrete" keyTimes="0;0.25;0.5;0.75;1" values="#527eff;#2a12ff;#6ad6f8;#50d6d2;#527eff" begin="0s" />
-            </circle><circle cx="16" cy="50" r="10" fill="#527eff">
-                    <animate attributeName="r" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="0;0;10;10;10" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="0s" />
-                    <animate attributeName="cx" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="16;16;16;50;84" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="0s" />
-                </circle><circle cx="50" cy="50" r="10" fill="#50d6d2">
-                    <animate attributeName="r" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="0;0;10;10;10" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.25s" />
-                    <animate attributeName="cx" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="16;16;16;50;84" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.25s" />
-                </circle><circle cx="84" cy="50" r="10" fill="#6ad6f8">
-                    <animate attributeName="r" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="0;0;10;10;10" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.5s" />
-                    <animate attributeName="cx" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="16;16;16;50;84" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.5s" />
-                </circle><circle cx="16" cy="50" r="10" fill="#2a12ff">
-                    <animate attributeName="r" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="0;0;10;10;10" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.75s" />
-                    <animate attributeName="cx" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="16;16;16;50;84" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.75s" />
-                </circle><g /></g></svg></div>}
-            {error() && <div>Error: {error()}</div>}
-            {data() && (
-                <div class='mt-2'>
-                    <div>
-                        {data() && data()!.result.author && (
-                            <div class='flex justify-center flex-wrap'>
-                                <div class="relative">
-                                    <img crossorigin="anonymous" class="rounded-full h-32 w-32" src={data()!.result.author?.avatar ?? ""} alt={data()!.result.author.nickname ?? ""} /><a class="absolute bottom-0 right-0" href={`https://dl.vid3konline.workers.dev/api/download?url=${encodeURIComponent(data()!.result.author?.avatar ?? "")}&type=.png&title=${data()!.result.author?.nickname ?? ""}`}><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M7 17h10v-2H7zm5-3l4-4l-1.4-1.4l-1.6 1.55V6h-2v4.15L9.4 8.6L8 10zm0 8q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22"></path></svg></a></div>
-                                <h1
-                                    class='text-2xl font-bold text-center w-full mt-2'
-                                >{data()!.result.author?.nickname}</h1>
-                            </div>
-                        )}
-                    </div>
-
-                    <div>
-                        <video controls src={data()!.result.video1 ?? data()!.result.video_hd ?? data()!.result.video_watermark ?? ""}
-                            class=" rounded-md shadow-md my-3 w-3/4 mx-auto"
-                        ></video>
-                        <p
-                            class='text-center text-lg font-semibold mx-auto'
-                        >{data()!.result.desc}</p>
-
-                    </div>
-                    <div class='flex flex-col justify-center gap-2 mt-2'>
-                        {data()!.result.video1 && <a href={`https://dl.vid3konline.workers.dev/api/download?url=${encodeURIComponent(data()!.result.video1 ?? "")}&type=.mp4&title=${data()!.result.author?.nickname}`} class="p-2 bg-blue-600 shadow-md h-10 rounded text-white">Download Video Low Without Watermaker</a>}
-                        {data()!.result.video_hd && <a href={`https://dl.vid3konline.workers.dev/api/download?url=${encodeURIComponent(data()!.result.video_hd ?? "")}&type=.mp4&title=${data()!.result.author?.nickname}`} class="p-2 bg-blue-600 shadow-md h-10 rounded text-white">Download Video HD Without Watermaker</a>}
-                        {data()!.result.video_watermark && <a href={`https://dl.vid3konline.workers.dev/api/download?url=${encodeURIComponent(data()!.result.video_watermark ?? "")}&type=.mp4&title=${data()!.result.author?.nickname}`} class="p-2 bg-blue-600 shadow-md h-10 rounded text-white">Download Video With Watermark</a>}
-                        {data()!.result.music && <a href={`https://dl.vid3konline.workers.dev/api/download?url=${encodeURIComponent(data()!.result.music ?? "")}&type=.mp3&title=${data()!.result.author?.nickname ?? ""}`} class="p-2 bg-blue-600 shadow-md h-10 rounded text-white">Download Audio Only</a>
-
-                        }
-                    </div>
-
-
-                </div>
-            )}
+  const showFallbackAd = () => {
+    const adContainer = document.getElementById("ad-banner");
+    if (!adContainer) return;
+    
+    adContainer.innerHTML = `
+      <div style="width:336px;height:280px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px dashed #ddd;">
+        <div style="text-align:center;color:#666;">
+          <p>Advertisement</p>
+          <p style="font-size:12px;margin-top:8px;">Ad failed to load</p>
         </div>
-    )
+      </div>
+    `;
+  };
 
+  onCleanup(() => {
+    const script = document.getElementById("aclib");
+    if (script) script.remove();
+  });
+
+  return (
+    <div class="max-w-6xl mx-auto mt-8 px-4">
+      <Toaster />
+
+      {/* Input Form Section */}
+      <div class="max-w-6xl mx-auto">
+        <div class="download-box rounded-2xl">
+          <div class="bg-cyan-800/80 rounded-xl backdrop-blur-md p-4">
+            <form class="flex flex-col md:flex-row items-stretch md:items-center gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!url()) {
+                  toast.error("Please enter a valid URL");
+                } else {
+                  fetchData();
+                }
+              }}
+            >
+              <div class="relative flex-grow">
+                <input type="text"
+                  value={url()}
+                  onInput={(e) => setUrl(e.currentTarget.value)}
+                  placeholder="Paste TikTok or Douyin video link here"
+                  class="w-full h-14 border-gray-700 text-black rounded-xl px-5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 flex-1 px-4 py-3 rounded-md focus:ring-2 focus:ring-blue-600"
+                />
+                <button type="button" 
+                  onClick={handlePaste} 
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2">
+                  <svg xmlns="[invalid url, do not cite] class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2"></path>
+                  </svg>
+                  Paste
+                </button>
+              </div>
+              <button type="submit" class="h-14 px-8 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105">
+                <svg xmlns="[invalid url, do not cite] class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg> 
+                Download
+              </button>
+            </form>
+            <p class="text-sm text-gray-500 mt-2">Supports TikTok (tiktok.com) and Douyin (douyin.com)</p>
+          </div>
+        </div>
+      </div>
+
+      {loading() && (
+        <div class="flex justify-center mt-4">
+          <svg class="animate-spin h-10 w-10 text-blue-600" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+          </svg>
+        </div>
+      )}
+
+      {data() && (
+        <div class="mt-6">
+          <div class="mt-4 max-w-6xl mx-auto">
+            <div class="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-lg overflow-hidden backdrop-blur-sm border border-white/10 p-4">
+              <div class="flex flex-col md:flex-row gap-4">
+                <div class="md:w-1/3 flex-shrink-0">
+                  <div class="relative rounded-lg overflow-hidden max-h-[430px]">
+                    <video controls src={data()!.result.videoSD || data()!.result.videoHD || data()!.result.videoWatermark || data()!.result.music || ""} class="w-full h-full object-cover" referrerpolicy="no-referrer"></video>
+                  </div>
+                </div>
+
+                <div class="md:w-2/3 flex flex-col justify-between">
+                  <div class="mb-3">
+                    <div class="flex items-center gap-3 justify-between mb-1">
+                      <img src={data()!.result.author.avatar || ""}
+                        alt={data()!.result.author.nickname || ""}
+                        class="rounded-full w-24 h-24"
+                      />
+                      <h2 class="text-xl font-bold text-gray-900 dark:text-white">{data()!.result.author.nickname}</h2>
+                      <div class="text-gray-400 text-xs px-2 py-1 bg-white/10 rounded-full"></div>
+                    </div>
+                    <div class="text-gray-400 text-xs mb-2">{data()!.result.desc}</div>
+                    
+                    {/* Ad Banner Container */}
+                    <div class="flex justify-center my-4">
+                      <div id="ad-banner" style="min-height:280px;width:336px;margin:0 auto;">
+                        {!adLoaded() && (
+                          <div style="width:336px;height:280px;display:flex;align-items:center;justify-content:center;background:#f5f5f5;border-radius:8px;">
+                            <div class="animate-pulse text-gray-400">Loading advertisement...</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="space-y-2">
+                    <button class="download-button bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300">
+                      <svg xmlns="[invalid url, do not cite] class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                      </svg> 
+                      {data()!.result.videoSD && (
+                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoSD)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download SD (No Watermark)</a>
+                      )}
+                    </button>
+                    <button class="download-button bg-gradient-to-r from-pink-600 to-pink-400 hover:from-pink-500 hover:to-pink-300">
+                      <svg xmlns="[invalid url, do not cite] class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                      </svg> 
+                      {data()!.result.videoHD && (
+                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoHD)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download HD (No Watermark)</a>
+                      )}
+                    </button>
+                    <button class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300">
+                      <svg xmlns="[invalid url, do not cite] class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                      </svg> 
+                      {data()!.result.videoWatermark && (
+                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoWatermark)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download (With Watermark)</a>
+                      )}
+                    </button>
+                    <button class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300">
+                      <a href="/" class="btn">Download Another Video</a> 
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
-export default InputScreen
+export default InputScreen;
