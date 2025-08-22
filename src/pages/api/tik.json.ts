@@ -4,11 +4,19 @@ import { Downloader } from "@tobyg74/tiktok-api-dl";
 export const prerender = false;
 export const GET: APIRoute = async ({ request }) => {
   try {
-    let url = new URL(request.url);
-    let params = url.searchParams;
-    let urlTik = params.get("url") || "";
+    // Alternative approach - using request.url directly
+    const requestUrl = new URL(request.url);
+    const urlTik = requestUrl.searchParams.get("url") || "";
+    
+    // Debug: Log the incoming request
+    console.log("Request URL:", request.url);
+    console.log("Parsed URL:", requestUrl.href);
+    console.log("Search params:", requestUrl.search);
+    console.log("All URL params:", Array.from(requestUrl.searchParams.entries()));
+    console.log("TikTok URL parameter:", urlTik);
 
     if (!urlTik) {
+      console.log("No URL parameter found");
       return new Response(JSON.stringify({ error: "url is required" }), {
         status: 400,
         headers: {
