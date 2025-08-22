@@ -3,6 +3,7 @@ import { ViewTransitions } from "astro:transitions";
 import { pwaInfo } from "virtual:pwa-info";
 import Footer from "@components/footer.astro";
 import Navbar from "@components/navbar/navbar.astro";
+import LanguageSelector from "@components/languageselector.astro"; // Added missing import
 import "@fontsource-variable/inter";
 
 // Remove old astro-i18next imports
@@ -38,13 +39,13 @@ const resolvedImageWithDomain = new URL(
 
 const { title } = Astro.props;
 const makeTitle = title
-	? `${title} | Astros`
+	? `${title} | TikTokio`
 	: "TikTokio: TikTok Downloader - Download TikTok Videos no Watermark";
 
 // Simplified and safe hreflang generation
 function generateHrefLangs() {
 	// Skip hreflang generation during static build to avoid errors
-	if (!Astro.url) {
+	if (!safeUrl) {
 		return [];
 	}
 	
@@ -105,12 +106,12 @@ const hrefLangs = generateHrefLangs();
 		/>
 		
 		<!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={makeTitle} />
-  <meta name="twitter:description" content="TikTokio - Tiktok downloader to online download tiktok videos in mp4 without watermark easily, Tiktok video downloader is Fast, easy and works on any device" />
-  <meta name="twitter:image" content={resolvedImageWithDomain} />
-  <meta name="twitter:site" content="@YourTwitterHandle" />
-  <meta name="twitter:creator" content="@tiktokio_cam" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={makeTitle} />
+		<meta name="twitter:description" content="TikTokio - Tiktok downloader to online download tiktok videos in mp4 without watermark easily, Tiktok video downloader is Fast, easy and works on any device" />
+		<meta name="twitter:image" content={resolvedImageWithDomain} />
+		<meta name="twitter:site" content="@YourTwitterHandle" />
+		<meta name="twitter:creator" content="@tiktokio_cam" />
 		<script is:inline>
 			function handleThemeChange() {
 				if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
@@ -127,14 +128,27 @@ const hrefLangs = generateHrefLangs();
 		<script src="/src/pwa.ts"></script>
 	</head>
 	<body class="dark:bg-stone-950">
-		<Navbar />
-		<slot />
+		<header class="relative">
+			<Navbar />
+			<!-- Language Selector in header -->
+			<div class="absolute top-4 right-4">
+				<LanguageSelector />
+			</div>
+		</header>
+		<main>
+			<slot />
+		</main>
 		<Footer />
 		<style is:global>
 			/* Improve Page speed */
 			/* https://css-tricks.com/almanac/properties/c/content-visibility/ */
 			img {
 				content-visibility: auto;
+			}
+			
+			/* Ensure header has relative positioning for language selector */
+			header {
+				position: relative;
 			}
 		</style>
 	</body>
