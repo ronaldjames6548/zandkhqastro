@@ -57,12 +57,7 @@ export const menuitems = [
     </a>
     <div class="flex-grow md:hidden"></div>
 
-    <div class="flex justify-center gap-3 items-center sm:hidden">
-      <LanguageSelector
-        showFlag={true}
-        class="appearance-none py-1 px-2 rounded bg-slate-100 dark:bg-stone-950"
-      />
-    </div>
+    
     <button
       class="md:hidden text-gray-500 w-10 h-10 relative focus:outline-none"
       @click="open = !open"
@@ -197,6 +192,14 @@ export const menuitems = [
         )
       }
     </div>
-    
+    <div class="mt-4 md:mt-0 flex flex-col md:flex-row gap-4 hidden md:block">
+      <div class="flex justify-center gap-3 items-center">
+        <LanguageSelector
+        showFlag={true}
+        class="appearance-none py-1 px-2 rounded bg-slate-100 dark:bg-stone-950"
+      />
+      </div>
+     
+    </div>
   </nav>
 </div>
