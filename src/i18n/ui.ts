@@ -182,7 +182,6 @@ export const ui = {
     'blog.next': 'Next',
   },
   it: {
-    
     // Site metadata
     'site.title': 'TikTokio: Downloader TikTok - Scarica Video TikTok senza Filigrana',
     'site.description': 'TikTokio - Downloader TikTok per scaricare video TikTok in mp4 senza filigrana facilmente. Downloader di video TikTok veloce, semplice e funziona su qualsiasi dispositivo',
@@ -356,7 +355,5 @@ export const ui = {
     // Blog section
     'blog.prev': 'Precedente',
     'blog.next': 'Successivo',
-  },
-};
 },
 } as const;
