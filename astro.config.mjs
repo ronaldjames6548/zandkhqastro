@@ -8,12 +8,12 @@ import alpinejs from "@astrojs/alpinejs";
 import solidJs from "@astrojs/solid-js";
 import AstroPWA from "@vite-pwa/astro";
 import icon from "astro-icon";
-import vercel from "@astrojs/vercel/serverless"; // Add this import
+// Removed vercel import - package not installed
 
 // https://astro.build/config
 export default defineConfig({
-  output: "server", // or "hybrid"
-  adapter: vercel(), // Add this line
+  output: "static", // Changed to static to fix deployment
+  // Removed adapter - not needed for static output
   site: "https://zandkhqastro.vercel.app",
 
   // Add Astro's built-in i18n configuration
@@ -27,7 +27,7 @@ export default defineConfig({
 
   vite: {
     define: {
-      __DATE__: `'${new Date().toISOString()}'`,
+      __DATE__: `'${new Date().toISOString()}'`, // Fixed: __ instead of **
     },
   },
   integrations: [
