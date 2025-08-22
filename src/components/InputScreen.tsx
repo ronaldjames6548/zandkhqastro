@@ -21,34 +21,44 @@ interface TikTokData {
 
 type Props = {};
 
-
 function InputScreen({}: Props) {
   const [url, setUrl] = createSignal("");
   const [data, setData] = createSignal<TikTokData | null>(null);
   const [loading, setLoading] = createSignal(false);
   const [error, setError] = createSignal("");
-  const [adLoaded, setAdLoaded] = createSignal(false);
 
   const fetchData = async () => {
     setLoading(true);
+    setError("");
     try {
-      let res = await fetch(`/api/tik.json?url=${encodeURIComponent(url())}`);
-      let json = await res.json();
-      if (json.status == "error") throw new Error(json.message);
-      setData(json ?? null);
+      const response = await fetch(`/api/tik.json?url=${encodeURIComponent(url().trim())}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const json = await response.json();
+      if (json.status === "error") {
+        throw new Error(json.message || "Failed to fetch TikTok data");
+      }
+      if (!json.result) {
+        throw new Error("No video data found");
+      }
+      if (!json.result.author || typeof json.result.author !== "object") {
+        throw new Error("Invalid video data: Author information is missing");
+      }
+      setData(json);
       loadAd();
-      setError("");
     } catch (error) {
-      toast.error(error.message, {
+      const errorMessage = error instanceof Error ? error.message : "Failed to load TikTok video";
+      toast.error(errorMessage, {
         duration: 3000,
         position: "bottom-center",
-        style: {
-          "font-size": "16px",
-        },
+        style: { "font-size": "16px" },
       });
       setData(null);
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handlePaste = async () => {
@@ -67,33 +77,18 @@ function InputScreen({}: Props) {
     const adContainer = document.getElementById("ad-banner");
     if (!adContainer) return;
 
-    // Clear previous content
     adContainer.innerHTML = '';
 
-    // Create the AC script if it doesn't exist
     if (!document.getElementById("aclib")) {
       const script = document.createElement("script");
       script.id = "aclib";
       script.src = "https://acscdn.com/script/aclib.js";
       script.async = true;
-      script.onload = () => {
-        if (typeof aclib !== 'undefined') {
-          runAdcashBanner();
-        } else {
-          showFallbackAd();
-        }
-      };
-      script.onerror = () => {
-        showFallbackAd();
-      };
+      script.onload = () => (typeof aclib !== 'undefined' ? runAdcashBanner() : showFallbackAd());
+      script.onerror = showFallbackAd;
       document.body.appendChild(script);
     } else {
-      // Script already exists, just run the banner
-      if (typeof aclib !== 'undefined') {
-        runAdcashBanner();
-      } else {
-        showFallbackAd();
-      }
+      typeof aclib !== 'undefined' ? runAdcashBanner() : showFallbackAd();
     }
   };
 
@@ -107,9 +102,8 @@ function InputScreen({}: Props) {
         zoneId: '9480206',
         width: 336,
         height: 280,
-        container: document.getElementById("ac-banner")
+        container: document.getElementById("ac-banner"),
       });
-      setAdLoaded(true);
     } catch (e) {
       console.error("Adcash error:", e);
       showFallbackAd();
@@ -119,7 +113,7 @@ function InputScreen({}: Props) {
   const showFallbackAd = () => {
     const adContainer = document.getElementById("ad-banner");
     if (!adContainer) return;
-    
+
     adContainer.innerHTML = `
       <div style="width:336px;height:280px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px dashed #ddd;">
         <div style="text-align:center;color:#666;">
@@ -139,41 +133,89 @@ function InputScreen({}: Props) {
     <div class="max-w-6xl mx-auto mt-8 px-4">
       <Toaster />
 
-      {/* Input Form Section */}
       <div class="max-w-6xl mx-auto">
         <div class="download-box rounded-2xl">
           <div class="bg-cyan-800/80 rounded-xl backdrop-blur-md p-4">
-            <form class="flex flex-col md:flex-row items-stretch md:items-center gap-2"
+            <form
+              class="flex flex-col md:flex-row items-stretch md:items-center gap-2"
               onSubmit={(e) => {
                 e.preventDefault();
-                if (!url()) {
-                  toast.error("Please enter a valid URL");
+                if (!url().trim()) {
+                  toast.error("Please enter a valid TikTok URL");
                 } else {
                   fetchData();
                 }
               }}
             >
               <div class="relative flex-grow">
-                <input type="text"
+                <input
+                  type="text"
                   value={url()}
                   onInput={(e) => setUrl(e.currentTarget.value)}
                   placeholder="Paste TikTok video link here"
                   class="w-full h-14 border-gray-700 text-black rounded-xl px-5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 flex-1 px-4 py-3 rounded-md focus:ring-2 focus:ring-blue-600"
                 />
-                <button type="button" 
-                  onClick={handlePaste} 
-                  class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2"></path>
+                <button
+                  type="button"
+                  onClick={handlePaste}
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2"
+                    />
                   </svg>
                   Paste
                 </button>
               </div>
-              <button type="submit" class="h-14 px-8 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg> 
-                Download
+              <button
+                type="submit"
+                disabled={loading()}
+                class={`h-14 px-8 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 ${loading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {loading() ? (
+                  <svg class="animate-spin h-6 w-6" viewBox="0 0 24 24">
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      fill="none"
+                    />
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    />
+                  </svg>
+                )}
+                {loading() ? "Processing..." : "Download"}
               </button>
             </form>
           </div>
@@ -182,10 +224,31 @@ function InputScreen({}: Props) {
 
       {loading() && (
         <div class="flex justify-center mt-4">
-          <svg class="animate-spin h-10 w-10 text-blue-600" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+          <svg
+            class="animate-spin h-10 w-10 text-blue-600"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+              fill="none"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8z"
+            />
           </svg>
+        </div>
+      )}
+
+      {error() && !loading() && (
+        <div class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center">
+          <p>{error()}</p>
         </div>
       )}
 
@@ -196,23 +259,30 @@ function InputScreen({}: Props) {
               <div class="flex flex-col md:flex-row gap-4">
                 <div class="md:w-1/3 flex-shrink-0">
                   <div class="relative rounded-lg overflow-hidden max-h-[430px]">
-                    <video controls src={data()!.result.videoSD || data()!.result.videoHD || data()!.result.videoWatermark || data()!.result.music || ""} class="w-full h-full object-cover" referrerpolicy="no-referrer"></video>
+                    <video
+                      controls
+                      src={data().result.videoSD || data().result.videoHD || data().result.videoWatermark || data().result.music || ""}
+                      class="w-full h-full object-cover"
+                      referrerpolicy="no-referrer"
+                    ></video>
                   </div>
                 </div>
 
                 <div class="md:w-2/3 flex flex-col justify-between">
                   <div class="mb-3">
                     <div class="flex items-center gap-3 justify-between mb-1">
-                      <img src={data()!.result.author.avatar || ""}
-                        alt={data()!.result.author.nickname || ""}
+                      <img
+                        src={data().result.author?.avatar || ""}
+                        alt={data().result.author?.nickname || "TikTok Video"}
                         class="rounded-full w-24 h-24"
                       />
-                      <h2 class="text-xl font-bold text-gray-900 dark:text-white">{data()!.result.author.nickname}</h2>
+                      <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                        {data().result.author?.nickname || "Unknown Author"}
+                      </h2>
                       <div class="text-gray-400 text-xs px-2 py-1 bg-white/10 rounded-full"></div>
                     </div>
-                    <div class="text-gray-400 text-xs mb-2">{data()!.result.desc}</div>
-                    
-                    {/* Ad Banner Container */}
+                    <div class="text-gray-400 text-xs mb-2">{data().result.desc || "No description available"}</div>
+
                     <div class="flex justify-center my-4">
                       <div id="ad-banner" style="min-height:280px;width:336px;margin:0 auto;">
                         {!adLoaded() && (
@@ -225,33 +295,92 @@ function InputScreen({}: Props) {
                   </div>
 
                   <div class="space-y-2">
-                    <button class="download-button bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                      </svg> 
-                      {data()!.result.videoSD && (
-                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoSD)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download SD (No Watermark)</a>
-                      )}
-                    </button>
-                    <button class="download-button bg-gradient-to-r from-pink-600 to-pink-400 hover:from-pink-500 hover:to-pink-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                      </svg> 
-                      {data()!.result.videoHD && (
-                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoHD)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download HD (No Watermark)</a>
-                      )}
-                    </button>
-                    <button class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                      </svg> 
-                      {data()!.result.videoWatermark && (
-                        <a href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data()!.result.videoWatermark)}&type=.mp4&title=${data()!.result.author.nickname}`} class="btn">Download (With Watermark)</a>
-                      )}
-                    </button>
-                    <button class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300">
-                      <a href="/" class="btn">Download Another Video</a> 
-                    </button>
+                    {data().result.videoSD && (
+                      <a
+                        href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data().result.videoSD)}&type=.mp4&title=${encodeURIComponent(data().result.author?.nickname || "tiktok-video")}`}
+                        class="download-button bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 w-full px-4 py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all duration-300 no-underline"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                          />
+                        </svg>
+                        Download SD (No Watermark)
+                      </a>
+                    )}
+                    {data().result.videoHD && (
+                      <a
+                        href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data().result.videoHD)}&type=.mp4&title=${encodeURIComponent(data().result.author?.nickname || "tiktok-video")}`}
+                        class="download-button bg-gradient-to-r from-pink-600 to-pink-400 hover:from-pink-500 hover:to-pink-300 w-full px-4 py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all duration-300 no-underline"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                          />
+                        </svg>
+                        Download HD (No Watermark)
+                      </a>
+                    )}
+                    {data().result.videoWatermark && (
+                      <a
+                        href={`https://dl.tiktokiocdn.workers.dev/api/download?url=${encodeURIComponent(data().result.videoWatermark)}&type=.mp4&title=${encodeURIComponent(data().result.author?.nickname || "tiktok-video")}`}
+                        class="download-button bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 w-full px-4 py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all duration-300 no-underline"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                          />
+                        </svg>
+                        Download (With Watermark)
+                      </a>
+                    )}
+                    <a
+                      href="/"
+                      class="download-button bg-gradient-to-r from-gray-600 to-gray-400 hover:from-gray-500 hover:to-gray-300 w-full px-4 py-3 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all duration-300 no-underline"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
+                      </svg>
+                      Download Another Video
+                    </a>
                   </div>
                 </div>
               </div>
