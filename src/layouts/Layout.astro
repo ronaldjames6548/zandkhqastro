@@ -21,13 +21,13 @@ export interface Props {
 }
 
 // Get current language and translations
-const currentLang = getLangFromUrl(Astro.url);
+const currentLang = getLangFromUrl(Astro.url || { pathname: '/' });
 const t = useTranslations(currentLang);
 
 // Use provided lang or detect from URL
 const pageLang = Astro.props.lang || currentLang;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const canonicalURL = new URL(Astro.url?.pathname || '/', Astro.site).toString();
 const resolvedImageWithDomain = new URL(
 	"/meta/opengraph.png",
 	Astro.site,
