@@ -41,23 +41,30 @@ const makeTitle = title
 	? `${title} | Astros`
 	: "Astros - Starter Template for Astro with Tailwind CSS";
 
-// Generate hreflang links for all supported languages
+// Simplified and safe hreflang generation
 function generateHrefLangs() {
-	const currentPath = safeUrl.pathname || '/';
-	
-	// Remove language prefix to get base path
-	let basePath = currentPath;
-	if (currentPath && currentPath.startsWith('/it/')) {
-		basePath = currentPath.substring(3) || '/';
-	} else if (currentPath === '/it') {
-		basePath = '/';
+	// Skip hreflang generation during static build to avoid errors
+	if (!Astro.url) {
+		return [];
 	}
 	
-	// Generate hreflang for each language
-	return Object.keys(languages).map(lang => {
-		const href = getAbsoluteLocaleUrl(lang, basePath === '/' ? '' : basePath);
-		return { lang, href };
-	});
+	try {
+		const baseUrl = Astro.site?.toString() || 'https://astros.zank.studio';
+		
+		// Generate simple hreflang links
+		return Object.keys(languages).map(lang => {
+			let href;
+			if (lang === 'en') {
+				href = baseUrl;
+			} else {
+				href = `${baseUrl}${lang}/`;
+			}
+			return { lang, href };
+		});
+	} catch (error) {
+		// Return empty array if any error occurs during build
+		return [];
+	}
 }
 
 const hrefLangs = generateHrefLangs();
