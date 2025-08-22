@@ -34,35 +34,29 @@ function InputScreen({}: Props) {
     
     try {
       const tiktokUrl = url().trim();
-      console.log("=== FRONTEND DEBUG ===");
+      console.log("=== FRONTEND DEBUG (POST) ===");
       console.log("1. Original URL:", tiktokUrl);
-      console.log("2. Encoded URL:", encodeURIComponent(tiktokUrl));
       
-      // Construct the API URL properly
-      const apiUrl = `/api/tik.json?url=${encodeURIComponent(tiktokUrl)}`;
-      console.log("3. Final API URL:", apiUrl);
+      // Use POST with JSON body instead of GET with query params
+      const requestBody = { url: tiktokUrl };
+      console.log("2. Request body:", requestBody);
       
-      let res = await fetch(apiUrl, {
-        method: 'GET',
+      let res = await fetch(`/api/tik.json`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(requestBody)
       });
       
-      console.log("4. Response status:", res.status);
-      console.log("5. Response URL:", res.url);
+      console.log("3. Response status:", res.status);
+      console.log("4. Response URL:", res.url);
       
       let json = await res.json();
       
       // *** LOG THE FULL API RESPONSE ***
-      console.log("6. FULL API RESPONSE:");
+      console.log("5. FULL API RESPONSE:");
       console.log(JSON.stringify(json, null, 2));
-      
-      // Check if response has debug info
-      if (json.debug) {
-        console.log("7. DEBUG INFO FROM SERVER:");
-        console.log(JSON.stringify(json.debug, null, 2));
-      }
       
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status} - ${json.error || 'Unknown error'}`);
@@ -222,7 +216,7 @@ function InputScreen({}: Props) {
                   return;
                 }
                 
-                console.log("Calling fetchData...");
+                console.log("Calling fetchData with POST method...");
                 fetchData();
               }}
             >
@@ -241,7 +235,7 @@ function InputScreen({}: Props) {
                   onClick={handlePaste} 
                   class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 112 2h2a2 2 0 012-2"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012 2h2a2 2 0 012-2"></path>
                   </svg>
                   Paste
                 </button>
