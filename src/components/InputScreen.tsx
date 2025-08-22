@@ -5,17 +5,21 @@ interface TikTokData {
   status: string | null;
   result: {
     type: string | null;
-    author: {
-      avatar: string | null;
-      nickname: string | null;
+    author?: {
+      avatar?: string | null;
+      nickname?: string | null;
     };
-    desc: string | null;
-    videoSD: string | null;
-    videoHD: string | null;
-    video_hd: string | null;
-    videoWatermark: string | null;
-    music: string | null;
+    desc?: string | null;
+    videoSD?: string | null;
+    videoHD?: string | null;
+    video_hd?: string | null;
+    videoWatermark?: string | null;
+    video?: string[] | null; // Sometimes it's an array
+    music?: string | null;
     uploadDate?: string | null;
+    // Additional possible properties from the API
+    title?: string | null;
+    create_time?: number | null;
   };
 }
 
@@ -36,16 +40,25 @@ function InputScreen({}: Props) {
       // Debug: log the response to see what we're getting
       console.log("API Response:", json);
       
-      if (json.status == "error") throw new Error(json.message || "API returned an error");
+      // Check for error property (not status)
+      if (json.error) {
+        throw new Error(json.error);
+      }
       
-      // Validate response structure
+      // Check for status field indicating error
+      if (json.status === "error") {
+        throw new Error(json.message || "API returned an error");
+      }
+      
+      // Validate response structure - be more flexible
       if (!json.result) {
         throw new Error("Invalid response: missing result data");
       }
       
-      if (!json.result.author) {
-        throw new Error("Invalid response: missing author data");
-      }
+      // Don't require author - some videos might not have complete data
+      // if (!json.result.author) {
+      //   throw new Error("Invalid response: missing author data");
+      // }
       
       setData(json);
       setError("");
@@ -171,7 +184,15 @@ function InputScreen({}: Props) {
                   <div class="relative rounded-lg overflow-hidden max-h-[430px]">
                     <video 
                       controls 
-                      src={data()?.result?.videoSD || data()?.result?.videoHD || data()?.result?.videoWatermark || data()?.result?.music || ""} 
+                      src={
+                        data()?.result?.videoSD || 
+                        data()?.result?.videoHD || 
+                        data()?.result?.video_hd ||
+                        (Array.isArray(data()?.result?.video) ? data()?.result?.video[0] : data()?.result?.video) ||
+                        data()?.result?.videoWatermark || 
+                        data()?.result?.music || 
+                        ""
+                      } 
                       class="w-full h-full object-cover" 
                       referrerpolicy="no-referrer"
                     >

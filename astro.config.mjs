@@ -8,12 +8,12 @@ import alpinejs from "@astrojs/alpinejs";
 import AstroPWA from "@vite-pwa/astro";
 import icon from "astro-icon";
 import solidJs from "@astrojs/solid-js";
-// Remove vercel import for static build
+import vercel from '@astrojs/vercel'; // ADDED BACK: Need for API routes
 
 export default defineConfig({
   site: "https://zandkhqastro.vercel.app",
-  output: "static", // CHANGED: Use static output
-  // Remove adapter for static builds
+  output: "hybrid", // CHANGED: Required for API routes to work
+  adapter: vercel(), // ADDED BACK: Required for server-side functions
   
   i18n: {
     defaultLocale: "en",
