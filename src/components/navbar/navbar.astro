@@ -1,6 +1,7 @@
 ---
 import Button from "@components/ui/button.astro";
 import Link from "@components/ui/link.astro";
+import LanguageSelector from "@components/languageselector.astro"; // 🔧 ADDED MISSING IMPORT
 
 // Remove old astro-i18next imports
 // import { localizePath } from "astro-i18next";
@@ -119,7 +120,7 @@ export const menuitems = [
                 size="sm"
                 class="mt-[2px]"
               >
-                {item.titleKey ? t(item.titleKey, currentLang) : item.title}
+                {item.titleKey ? t(item.titleKey) : item.title}
                 <svg
                   fill="currentColor"
                   viewBox="0 0 20 20"
@@ -190,7 +191,7 @@ export const menuitems = [
               x-bind:class="{ 'dark:bg-gray-600': isActive }"
               data-path={item.path}
             >
-              {item.titleKey ? t(item.titleKey, currentLang) : item.title}
+              {item.titleKey ? t(item.titleKey) : item.title}
             </Link>
           )
         )
@@ -203,7 +204,6 @@ export const menuitems = [
           class="appearance-none py-1 px-2 rounded bg-slate-100 dark:bg-stone-950"
         />
       </div>
-     
     </div>
   </nav>
 </div>
