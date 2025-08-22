@@ -32,14 +32,14 @@ const pageLang = Astro.props.lang || currentLang;
 
 const canonicalURL = new URL(safeUrl.pathname || '/', Astro.site).toString();
 const resolvedImageWithDomain = new URL(
-	"/meta/opengraph.png",
+	"/meta/opengraph.webp",
 	Astro.site,
 ).toString();
 
 const { title } = Astro.props;
 const makeTitle = title
 	? `${title} | Astros`
-	: "Astros - Starter Template for Astro with Tailwind CSS";
+	: "TikTokio: TikTok Downloader - Download TikTok Videos no Watermark";
 
 // Simplified and safe hreflang generation
 function generateHrefLangs() {
@@ -49,7 +49,7 @@ function generateHrefLangs() {
 	}
 	
 	try {
-		const baseUrl = Astro.site?.toString() || 'https://astros.zank.studio';
+		const baseUrl = Astro.site?.toString() || 'https://zandkhqastro.vercel.app';
 		
 		// Generate simple hreflang links
 		return Object.keys(languages).map(lang => {
@@ -89,20 +89,28 @@ const hrefLangs = generateHrefLangs();
 		<link rel="stylesheet" href="/index.css" />
 		<SEO
 			title={makeTitle}
-			description="Astros is a starter website template for Astro built with TailwindCSS and alpine js."
+			description="TikTokio - Tiktok downloader to online download tiktok videos in mp4 without watermark easily, Tiktok video downloader is Fast, easy and works on any device"
 			canonical={canonicalURL}
 			openGraph={{
 				basic: {
 					url: canonicalURL,
 					type: "website",
-					title: `Astros - Starter Template for Astro`,
+					title: `TikTokio: TikTok Downloader - Download TikTok Videos no Watermark`,
 					image: resolvedImageWithDomain,
 				},
 				image: {
-					alt: "Astros Homepage Screenshot",
+					alt: "TikTokio: TikTok Downloader",
 				},
 			}}
 		/>
+		
+		<!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={makeTitle} />
+  <meta name="twitter:description" content="TikTokio - Tiktok downloader to online download tiktok videos in mp4 without watermark easily, Tiktok video downloader is Fast, easy and works on any device" />
+  <meta name="twitter:image" content={resolvedImageWithDomain} />
+  <meta name="twitter:site" content="@YourTwitterHandle" />
+  <meta name="twitter:creator" content="@tiktokio_cam" />
 		<script is:inline>
 			function handleThemeChange() {
 				if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
