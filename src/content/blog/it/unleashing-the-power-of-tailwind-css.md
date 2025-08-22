@@ -1,19 +1,20 @@
 ---
-title: Sfruttare la Potenza di Tailwind CSS
+title: "Sfruttare la Potenza di Tailwind CSS"
 draft: false
-author: Jon Doe
+author: "Jon Doe"
 tags:
-  - tailwindcss
-  - webdev
+  - "Apps"
+  
 image:
-  alt: Tailwind CSS
-  src: /images/tailwind.png
-snippet: Tailwind CSS is a utility-first CSS framework that allows you to
+  src: "/images/tailwind.webp"
+  alt: "Tailwind CSS"
+snippet: "Tailwind CSS is a utility-first CSS framework that allows you to
   construct bespoke designs without any opinionated styles, offering flexibility
-  and granular control over your styles.
-publishDate: 2023-07-01 22:56
-category: Frameworks
+  and granular control over your styles."
+publishDate: "2023-06-29T11:39:00Z"
+category: "Tech"
 ---
+
 Tailwind CSS è un framework CSS basato sul principio utility-first, pieno di classi come `flex`, `pt-4`, `text-center` e `rotate-90` che possono essere composte per costruire qualsiasi design, direttamente nel tuo markup.
 
 ## Cos'è Tailwind CSS?

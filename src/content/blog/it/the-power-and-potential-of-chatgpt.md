@@ -1,20 +1,19 @@
 ---
-title: Il potere e il potenziale di ChatGPT
+title: "Il potere e il potenziale di ChatGPT"
 draft: false
-author: Jon Doe
+author: "Jon Doe"
 tags:
-  - ia
-  - chatbot
-  - apprendimentoautomatico
+  - "Apps"
+  
 image:
-  src: /images/chat-gpt.png
-  alt: chatgpt
-snippet: Svelando il mondo dell'IA avanzata con ChatGPT, un sofisticato chatbot
+  src: "/images/chat-gpt.webp"
+  alt: "chatgpt"
+snippet: "Svelando il mondo dell'IA avanzata con ChatGPT, un sofisticato chatbot
   che utilizza l'apprendimento automatico per generare testo simile a quello
   umano. Scopri le sue applicazioni, i punti di forza, i limiti e il potenziale
-  futuro.
-publishDate: 2023-07-01 00:00
-category: IA e ML
+  futuro."
+publishDate: "2023-06-29T11:39:00Z"
+category: "Tech"
 ---
 # Il potere e il potenziale di ChatGPT
 
