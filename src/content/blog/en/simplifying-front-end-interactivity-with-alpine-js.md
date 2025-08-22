@@ -3,15 +3,14 @@ title: Simplifying Front-End Interactivity with Alpine.js
 draft: false
 author: Jon Doe
 tags:
-  - alpinejs
-  - frontend
+  - Apps
 image:
-  src: /images/alpinjs.png
+  src: /images/alpinjs.webp
   alt: Alpine.js
 snippet: Alpine.js is a lightweight JavaScript framework for building
   interactive front-end components with simplicity and flexibility.
 publishDate: 2023-07-01 23:08
-category: Frameworks
+category: Tech
 ---
 Alpine.js is a lightweight JavaScript framework used to build interactive front-end components. It's lean, easy-to-use, and harnesses the power of Vue's or React's interactivity, with the simplicity of using Tailwind CSS classes.
 

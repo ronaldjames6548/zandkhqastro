@@ -3,17 +3,15 @@ title: "Introduction to Astro: A New Front-End Framework"
 draft: false
 author: Jon Doe
 tags:
-  - astro
-  - frontend
-  - webdev
+  - Apps
 image:
-  src: /images/astrojs.png
+  src: /images/astrojs.webp
   alt: Astro JS, a new Front-End Framework
 snippet: Astro is a modern front-end framework that brings an interesting
   paradigm shift in web application development, focusing on sending less
   JavaScript and leveraging modern browser features.
 publishDate: 2023-07-01 22:50
-category: Frameworks
+category: Tech
 ---
 Astro is a modern front-end framework that provides developers with a faster way to build websites. It brings about an interesting paradigm shift in how we think about building modern web applications. 
 
