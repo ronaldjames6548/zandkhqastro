@@ -40,11 +40,11 @@ const makeTitle = title
 
 // Generate hreflang links for all supported languages
 function generateHrefLangs() {
-	const currentPath = Astro.url.pathname;
+	const currentPath = Astro.url?.pathname || '/';
 	
 	// Remove language prefix to get base path
 	let basePath = currentPath;
-	if (currentPath.startsWith('/it/')) {
+	if (currentPath && currentPath.startsWith('/it/')) {
 		basePath = currentPath.substring(3) || '/';
 	} else if (currentPath === '/it') {
 		basePath = '/';
