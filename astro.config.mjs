@@ -4,85 +4,94 @@ import sitemap from "@astrojs/sitemap";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { autolinkConfig } from "./plugins/rehype-autolink-config";
 import rehypeSlug from "rehype-slug";
+import astroI18next from "astro-i18next";
 import alpinejs from "@astrojs/alpinejs";
-import solidJs from "@astrojs/solid-js";
 import AstroPWA from "@vite-pwa/astro";
 import icon from "astro-icon";
-// Removed vercel import - package not installed
+import solidJs from "@astrojs/solid-js";
+import vercel from '@astrojs/vercel/serverless';
 
-// https://astro.build/config
 export default defineConfig({
-  output: "static", // Changed to static to fix deployment
-  // Removed adapter - not needed for static output
   site: "https://zandkhqastro.vercel.app",
-
-  // Add Astro's built-in i18n configuration
-  i18n: {
-    defaultLocale: "en",
-    locales: ["en", "it"],
-    routing: {
-      prefixDefaultLocale: false, // /about for English, /it/about for Italian
+  output: "hybrid",
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
     },
-  },
-
+  }),
   vite: {
     define: {
-      __DATE__: `'${new Date().toISOString()}'`, // Fixed: __ instead of **
-    },
+      __DATE__: `'${new Date().toISOString()}'`
+    }
   },
   integrations: [
     tailwind(),
-    sitemap(),
+    astroI18next(),
     alpinejs(),
-    solidJs(),
     AstroPWA({
       mode: "production",
       base: "/",
       scope: "/",
-      includeAssets: ["favicon.svg"],
+      includeAssets: ["favicon.ico"],
       registerType: "autoUpdate",
       manifest: {
-        name: "Astros - Starter Template for Astro with Tailwind CSS",
-        short_name: "Astros",
+        name: "Tiktokio - TikTok Downloader - Download TikTok Videos Without Watermark",
+        short_name: "Tikokio",
         theme_color: "#ffffff",
-        icons: [
-          {
-            src: "pwa-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
-          },
-          {
-            src: "pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
-          {
-            src: "pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-        ],
+        icons: [{
+          src: "pwa-192x192.webp",
+          sizes: "192x192",
+          type: "image/webp"
+        }, {
+          src: "pwa-512x512.webp",
+          sizes: "512x512",
+          type: "image/webp"
+        }, {
+          src: "pwa-512x512.webp",
+          sizes: "512x512",
+          type: "image/webp",
+          purpose: "any maskable"
+        }]
       },
       workbox: {
         navigateFallback: "/404",
-        globPatterns: ["*.js"],
+        globPatterns: ["*.js"]
       },
       devOptions: {
         enabled: false,
         navigateFallbackAllowlist: [/^\/404$/],
-        suppressWarnings: true,
-      },
+        suppressWarnings: true
+      }
     }),
     icon(),
+    solidJs(),
+	sitemap({
+  filter(page) {
+    const url = new URL(page, 'https://zandkhqastro.vercel.app');
+    
+    // All non-English language codes
+    const nonEnglishLangs = ['it'];
+    
+    // Should exclude if:
+    const shouldExclude = 
+      // Non-English blog posts (but keeps /{lang}/blog/ index pages)
+      nonEnglishLangs.some(lang => 
+        url.pathname.startsWith(`/${lang}/blog/`) && 
+        url.pathname !== `/${lang}/blog/`
+      ) ||
+      // Pagination, tags, categories
+      /\/blog\/\d+\//.test(url.pathname) ||
+      url.pathname.includes('/tag/') || 
+      url.pathname.includes('/category/');
+
+    return !shouldExclude;
+  }
+})
   ],
   markdown: {
-    rehypePlugins: [
-      rehypeSlug,
-      [rehypeAutolinkHeadings, autolinkConfig],
-    ],
+    rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, autolinkConfig]]
   },
   experimental: {
-    contentCollectionCache: true,
-  },
+    contentCollectionCache: true
+  }
 });
