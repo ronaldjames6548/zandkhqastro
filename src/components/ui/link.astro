@@ -25,7 +25,8 @@ const {
 } = Astro.props;
 
 // Get current language
-const lang = getLangFromUrl(Astro.url);
+const safeUrl = Astro.url || { pathname: '/' } as URL;
+const lang = getLangFromUrl(safeUrl);
 
 // Helper function to create localized paths
 function localizePath(path: string) {

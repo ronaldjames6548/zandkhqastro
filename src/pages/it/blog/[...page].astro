@@ -51,7 +51,8 @@ export async function getStaticPaths({ paginate }) {
 const { page } = Astro.props;
 
 // Get current language and create translation function
-const lang = getLangFromUrl(Astro.url);
+const safeUrl = Astro.url || { pathname: '/' } as URL;
+const lang = getLangFromUrl(safeUrl);
 const t = useTranslations(lang);
 ---
 

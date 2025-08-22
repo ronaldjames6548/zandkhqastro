@@ -14,7 +14,8 @@ export interface Props {
 const { posts } = Astro.props;
 
 // Get current language and create translation function
-const lang = getLangFromUrl(Astro.url);
+const safeUrl = Astro.url || { pathname: '/' } as URL;
+const lang = getLangFromUrl(safeUrl);
 const t = useTranslations(lang);
 
 // Helper function to create localized paths

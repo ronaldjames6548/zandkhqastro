@@ -13,7 +13,8 @@ import { getLangFromUrl, useTranslations } from "../i18n/utils";
 import { getRelativeLocaleUrl } from "astro:i18n";
 
 // Get current language and create translation function
-const lang = getLangFromUrl(Astro.url);
+const safeUrl = Astro.url || { pathname: '/' } as URL;
+const lang = getLangFromUrl(safeUrl);
 const t = useTranslations(lang);
 
 // Helper function to create localized paths

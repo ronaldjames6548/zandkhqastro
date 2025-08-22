@@ -12,7 +12,8 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { Icon } from "astro-icon/components";
 
 // Get current language and create translation function
-const lang = getLangFromUrl(Astro.url);
+const safeUrl = Astro.url || { pathname: '/' } as URL;
+const lang = getLangFromUrl(safeUrl);
 const t = useTranslations(lang);
 
 // Helper function to create localized paths (if needed)
