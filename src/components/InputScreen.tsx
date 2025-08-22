@@ -33,7 +33,14 @@ function InputScreen({}: Props) {
     setError("");
     
     try {
-      let res = await fetch(`/api/tik.json?url=${encodeURIComponent(url())}`);
+      const tiktokUrl = url().trim();
+      console.log("Original URL:", tiktokUrl);
+      console.log("Encoded URL:", encodeURIComponent(tiktokUrl));
+      
+      const apiUrl = `/api/tik.json?url=${encodeURIComponent(tiktokUrl)}`;
+      console.log("API URL:", apiUrl);
+      
+      let res = await fetch(apiUrl);
       let json = await res.json();
       
       // Debug: Log the response
@@ -177,11 +184,20 @@ function InputScreen({}: Props) {
             <form class="flex flex-col md:flex-row items-stretch md:items-center gap-2"
               onSubmit={(e) => {
                 e.preventDefault();
-                if (!url()) {
+                const currentUrl = url().trim();
+                console.log("Form submission - URL value:", currentUrl);
+                
+                if (!currentUrl) {
                   toast.error("Please enter a valid URL");
-                } else {
-                  fetchData();
+                  return;
                 }
+                
+                if (!currentUrl.includes("tiktok.com") && !currentUrl.includes("douyin")) {
+                  toast.error("Please enter a valid TikTok URL");
+                  return;
+                }
+                
+                fetchData();
               }}
             >
               <div class="relative flex-grow">
