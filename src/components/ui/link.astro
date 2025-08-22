@@ -30,7 +30,7 @@ const lang = getLangFromUrl(safeUrl);
 
 // Helper function to create localized paths
 function localizePath(path: string) {
-	if (!path || path.startsWith('http') || path === '#') return path;
+	if (!path || (path && path.startsWith('http')) || path === '#') return path;
 	return getRelativeLocaleUrl(lang, path);
 }
 
@@ -53,7 +53,7 @@ const styles = {
 ---
 
 <a
-	href={href.startsWith("http") ? href : localizePath(href)}
+	href={href && href.startsWith("http") ? href : localizePath(href)}
 	{...rest}
 	class:list={[
 		"rounded-md text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",

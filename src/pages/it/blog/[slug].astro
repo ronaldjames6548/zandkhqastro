@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 	const blogEntries = await getCollection("blog");
 	// Filter for Italian blog posts (posts starting with "it/")
 	const localizedBlogEntries = blogEntries.filter((entry) =>
-		entry.slug.startsWith("it/")
+		entry.slug && entry.slug.startsWith("it/")
 	);
 	
 	return localizedBlogEntries.map((post) => {
@@ -46,7 +46,7 @@ const t = useTranslations(lang);
 
 // Helper function to create localized paths
 function localizePath(path: string) {
-	if (!path || path.startsWith('http') || path === '#') return path;
+	if (!path || (path && path.startsWith('http')) || path === '#') return path;
 	return getRelativeLocaleUrl(lang, path);
 }
 ---

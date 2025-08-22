@@ -19,7 +19,7 @@ const t = useTranslations(lang);
 
 // Helper function to create localized paths
 function localizePath(path: string) {
-	if (!path || path.startsWith('http') || path === '#') return path;
+	if (!path || (path && path.startsWith('http')) || path === '#') return path;
 	return getRelativeLocaleUrl(lang, path);
 }
 ---
