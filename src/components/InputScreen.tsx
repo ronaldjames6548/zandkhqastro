@@ -50,13 +50,28 @@ function InputScreen({}: Props) {
       });
       
       console.log("3. Response status:", res.status);
-      console.log("4. Response URL:", res.url);
+      console.log("4. Response headers:", Object.fromEntries(res.headers.entries()));
+      console.log("5. Response URL:", res.url);
       
-      let json = await res.json();
+      // Check if response has content
+      const responseText = await res.text();
+      console.log("6. Raw response text:", responseText);
+      console.log("7. Response text length:", responseText.length);
       
-      // *** LOG THE FULL API RESPONSE ***
-      console.log("5. FULL API RESPONSE:");
-      console.log(JSON.stringify(json, null, 2));
+      // Try to parse JSON only if we have content
+      let json;
+      if (responseText.trim() === "") {
+        throw new Error("API returned empty response");
+      }
+      
+      try {
+        json = JSON.parse(responseText);
+        console.log("8. Parsed JSON:", json);
+      } catch (parseError) {
+        console.error("9. JSON parse error:", parseError);
+        console.log("10. Response was not valid JSON. Raw text:", responseText);
+        throw new Error(`Invalid JSON response: ${responseText.substring(0, 100)}...`);
+      }
       
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status} - ${json.error || 'Unknown error'}`);
@@ -235,7 +250,7 @@ function InputScreen({}: Props) {
                   onClick={handlePaste} 
                   class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-700/80 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012 2h2a2 2 0 012-2"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 112 2h2a2 2 0 112-2"></path>
                   </svg>
                   Paste
                 </button>
