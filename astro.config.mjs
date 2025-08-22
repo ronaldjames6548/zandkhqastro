@@ -4,15 +4,16 @@ import sitemap from "@astrojs/sitemap";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { autolinkConfig } from "./plugins/rehype-autolink-config";
 import rehypeSlug from "rehype-slug";
-// Remove astroI18next import - not needed anymore
 import alpinejs from "@astrojs/alpinejs";
-import solidJs from "@astrojs/solid-js"; // Added SolidJS integration
+import solidJs from "@astrojs/solid-js";
 import AstroPWA from "@vite-pwa/astro";
 import icon from "astro-icon";
+import vercel from "@astrojs/vercel/serverless"; // Add this import
 
 // https://astro.build/config
 export default defineConfig({
-  output: "server", // ya "hybrid"
+  output: "server", // or "hybrid"
+  adapter: vercel(), // Add this line
   site: "https://zandkhqastro.vercel.app",
 
   // Add Astro's built-in i18n configuration
@@ -26,15 +27,14 @@ export default defineConfig({
 
   vite: {
     define: {
-      __DATE__: `'${new Date().toISOString()}'`, // Fixed: __ instead of **
+      __DATE__: `'${new Date().toISOString()}'`,
     },
   },
   integrations: [
     tailwind(),
     sitemap(),
-    // Remove astroI18next() - not needed anymore
     alpinejs(),
-    solidJs(), // Added SolidJS integration
+    solidJs(),
     AstroPWA({
       mode: "production",
       base: "/",
@@ -79,7 +79,6 @@ export default defineConfig({
   markdown: {
     rehypePlugins: [
       rehypeSlug,
-      // This adds links to headings
       [rehypeAutolinkHeadings, autolinkConfig],
     ],
   },
